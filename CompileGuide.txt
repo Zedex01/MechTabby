@@ -1,0 +1,9 @@
+
+
+create build dir
+
+cd build
+
+cmake .. -DPICO_SDK_PATH=~/opt/pico/pico-sdk
+
+ninja build
