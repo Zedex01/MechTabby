@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "stdlib.h": "c",
+        "cyw43_arch.h": "c"
+    }
+}

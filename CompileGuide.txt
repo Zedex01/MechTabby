@@ -1,9 +1,12 @@
+============System Variables=================
+PICO_SDK_PATH 
+ - Must be set to pico-sdk folder: C:\Users\user\opt\pico\pico-sdk
 
+picotool must be installed???
 
-create build dir
+=============================================
+within the build dir...
 
-cd build
+cmake .. //Compiles all the files
 
-cmake .. -DPICO_SDK_PATH=~/opt/pico/pico-sdk
-
-ninja build
+ninja 	//Builds the .uf2 file

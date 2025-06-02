@@ -1,0 +1,31 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:\\Users\\mmoran\\opt\\pico\\pico-sdk",
+                "C:\\Users\\mmoran\\opt\\pico\\picotool",
+                "C:\\Users\\mmoran\\opt\\pico\\pico-examples",
+                "C:/Users/mmoran/opt/pico/pico-sdk/src/common/pico_stdlib_headers/include",
+                "C:/Users/mmoran/opt/pico/pico-sdk/src/boards/include/boards",
+                "C:/Users/mmoran/opt/pico/pico-sdk/src/host/pico_stdio/include",
+                "C:/Users/mmoran/opt/pico/pico-sdk/src/common/pico_time/include",
+                "C:/Users/mmoran/opt/pico/pico-sdk/src/host/hardware_timer/include",
+                "C:/Users/mmoran/opt/pico/pico-sdk/src/host/hardware_gpio/include",
+                "C:/Users/mmoran/opt/pico/pico-sdk/src/host/hardware_uart/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.22621.0",
+            "compilerPath": "cl.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-msvc-x64"
+        }
+    ],
+    "version": 4
+}
