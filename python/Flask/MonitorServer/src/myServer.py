@@ -5,7 +5,9 @@ import os
 # Get the folder where this script lives
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Relative path to the other script or file
-script_path = os.path.join(BASE_DIR, r"tasks\task.py")
+script_path = os.path.join(BASE_DIR, r"tasks\record.py")
+
+stop_flag = os.path.join(BASE_DIR, r'stop.flag')
 
 proc = None
 #Create the app object to build the endpoints on
@@ -56,17 +58,19 @@ def startTask():
     print("Task Start")
     
     if proc is None or proc.poll() is not None:
-        proc = sp.Popen(["python", script_path])
+        proc = sp.Popen(["py", script_path])
     return redirect('/dashboard')
 
 @app.route('/stop-task', methods=['POST'])
 def killTask():
     global proc
     
-    if proc and proc.poll() is None:
-        print(f"Stopping task with PID: {proc.pid}")
-        proc.terminate()  # Try to gracefully stop
-        proc.wait()       # Wait for it to finish
+    if proc: #If th process is running...
+        with open(stop_flag, 'w') as f:
+            f.write('stop')
+            
+        proc.wait() #Wait for it to exit
+             
         proc = None
     
     return redirect('/dashboard')

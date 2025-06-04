@@ -3,16 +3,22 @@
 <head>
 	<title>Dashboard</title>
 	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-	<div class="container">
+	<div class="control-container">
 		<h1>Control Panel</h1>
-		<form action="/start-task" method="post">
-			<button type="submit" class="btn">Run Task</button>
-		</form>
-		<form action="/stop-task" method="post">
-			<button type="submit" class="btn">Stop Task</button>
-		</form>
+		<div class= "preview">
+		</div>
+		
+		<div class= "start-stop">
+			<form action="/start-task" method="post">
+				<button type="submit" class="btn">Start</button>
+			</form>
+			<form action="/stop-task" method="post">
+				<button type="submit" class="btn">Stop</button>
+			</form>
+		</div>
 	</div>
 </body>
 </html>
