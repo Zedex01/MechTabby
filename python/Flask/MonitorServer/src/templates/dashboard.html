@@ -9,16 +9,22 @@
 	<div class="control-container">
 		<h1>Control Panel</h1>
 		<div class= "preview">
+			<img src="http://127.0.0.1:8080/video_feed" alt="Live Stream"
+				onerror="this.onerror=null; this.src='/static/StreamOffline.jpg';">
+		</div>
+
+		<div class= "stream">
+			<form action="/toggle-stream" method="post">
+				<button type="submit" class="btn">Toggle Stream</button>
+			</form>
 		</div>
 		
-		<div class= "start-stop">
-			<form action="/start-task" method="post">
-				<button type="submit" class="btn">Start</button>
-			</form>
-			<form action="/stop-task" method="post">
-				<button type="submit" class="btn">Stop</button>
+		<div class= "record">
+			<form action="/toggle-record" method="post">
+				<button type="submit" class="btn">Toggle Recording</button>
 			</form>
 		</div>
+		
 	</div>
 </body>
 </html>

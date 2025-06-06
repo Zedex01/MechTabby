@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login</title>
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+	
+</head>
+<body>
+	<div class="login-container">
+		<form method="post">
+			<h1>Login</h1>
+			<div class="remember-forget">
+				<p>Invalid credentials. <a href="/login">Try Again</a></p>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

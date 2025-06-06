@@ -2,13 +2,29 @@ from flask import Flask, render_template_string, request, session, redirect, url
 from werkzeug.security import generate_password_hash, check_password_hash #Inlcuded within flask, for hashing passwords
 import subprocess as sp
 import os
+
+#start/stop launches the main hybrid script.
+#Start/stop Enables/ Disbales streaming
+
+#======================= Paths =============================
 # Get the folder where this script lives
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Relative path to the other script or file
-script_path = os.path.join(BASE_DIR, r"tasks\record.py")
+script_path = os.path.join(BASE_DIR, r"tasks\hybrid.py")
 
 stop_flag = os.path.join(BASE_DIR, r'stop.flag')
 
+EN_CAM = os.path.join(BASE_DIR, r'temp\EN_CAM.flag')
+EN_REC = os.path.join(BASE_DIR, r'temp\EN_REC.flag')
+
+
+#On Boot remove the flags:
+if os.path.exists(EN_CAM):
+    os.remove(EN_CAM)
+if os.path.exists(EN_REC):
+    os.remove(EN_REC)
+
+#=========================================================
 proc = None
 #Create the app object to build the endpoints on
 app = Flask(__name__)
@@ -31,12 +47,12 @@ def login():
         p = request.form['password']
         user_pass_hash = USERS.get(u)
         
-        if check_password_hash(user_pass_hash, p):
+        if user_pass_hash and check_password_hash(user_pass_hash, p):
             session['user'] = u 
             return redirect('/dashboard')
-        return "Invalid credentials. <a href='/login'>Try again</a>"
+        return render_template('InvalidCred.html')
     return render_template('login.html')
-
+    
 
 @app.route('/logout')
 def logout():
@@ -51,31 +67,39 @@ def dashboard():
         
     return redirect('/login')
 
-@app.route('/start-task', methods=['POST'])
-def startTask():
-    global proc
-    
-    print("Task Start")
-    
-    if proc is None or proc.poll() is not None:
-        proc = sp.Popen(["py", script_path])
-    return redirect('/dashboard')
 
-@app.route('/stop-task', methods=['POST'])
-def killTask():
-    global proc
     
-    if proc: #If th process is running...
-        with open(stop_flag, 'w') as f:
-            f.write('stop')
-            
-        proc.wait() #Wait for it to exit
-             
-        proc = None
-    
-    return redirect('/dashboard')
+@app.route('/toggle-stream', methods=['POST'])
+def toggleStream():
+
+    #Check Condition of stream
+    if os.path.exists(EN_CAM):
+        os.remove(EN_CAM)
+        return redirect('/dashboard')
+        
+    else:
+        with open(EN_CAM, 'w') as f:
+            f.write('EN_CAM')
+        return redirect('/dashboard')
+        
+@app.route('/toggle-record', methods=['POST'])
+def toggleRecording():
+    #Check Condition of stream
+    if os.path.exists(EN_REC):
+        os.remove(EN_REC)
+        print("Stopping Recording...")
+        return redirect('/dashboard')
+        
+    else:
+        with open(EN_REC, 'w') as f:
+            f.write('EN_REC')
+        print("Starting Recording...")
+        return redirect('/dashboard')
     
     
 if __name__ == '__main__':
+    #Start program for managing stream and recording!
+    proc = sp.Popen(["py", script_path])
+    #Start Webserver
     app.run(host='0.0.0.0',port=5000)
 

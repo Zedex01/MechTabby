@@ -11,9 +11,9 @@ os.makedirs(os.path.dirname(output_path), exist_ok=True)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 stop_flag = os.path.join(BASE_DIR, r'..\stop.flag')
 
+
 #Create the capture device, 0 is the default (integrated webcam.)
 cap = cv2.VideoCapture(0)
-
 
 #==================Recording==================
 #Define the codec and create a videowriter object
@@ -25,9 +25,11 @@ print(f"Recording to: {output_path}")
 
 try:
     while cap.isOpened():
-        ret, frame = cap.read()
-        if ret:
+        success, frame = cap.read()
+        
+        if success:
             out.write(frame)
+
         else:
             break
             

@@ -12,11 +12,12 @@ cap = cv2.VideoCapture(0)
 
 #Generator function that captures videoframes and yields them as JPEG byte data
 def gen_frames():
-    while True:
+    while cap.isOpened():
         success, frame = cap.read() #Capture a frame from this camera
+        
         if success:
             #encode frame as JPEG
-            ret, buffer = cv2.imencode('.jpg', frame)
+            _ , buffer = cv2.imencode('.jpg', frame) #_ is the return value, ie was it succesfull.
             frame = buffer.tobytes()
             
             #Yield frame in multipart format. This is what browsers deal with for MPEG streams
@@ -48,4 +49,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=5000)
+    app.run(host='127.0.0.1', port=8080)
