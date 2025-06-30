@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dashboard</title>
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+	<div class="control-container">
+		<h1>Control Panel</h1>
+		<div class= "preview">
+			<img src="/secure-stream" alt="Live Stream"
+				onerror="this.onerror=null; this.src='/static/StreamOffline.jpg';">
+		</div>
+
+		<div class= "stream">
+			<form action="/toggle-stream" method="post">
+				<button type="submit" class="btn">Toggle Stream</button>
+			</form>
+		</div>
+		
+	</div>
+</body>
+</html>
