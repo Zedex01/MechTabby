@@ -1,0 +1,152 @@
+//Matthew Moran	2025-07-04
+//
+//Program for interpreting serial input 
+//and controlling the output of ths switch controller
+
+//MUX Pins 
+const int s0 = 0;
+const int s1 = 1;
+const int s2 = 2;
+const int s3 = 3;
+const int SIG = 4;
+
+//Dig Pot Pin (X9C103S)
+const int CS = 5; //Active when LOW
+const int UD = 6; //
+const int INC = 7; //INC on rising edge
+
+//Voltage Sensor Pin
+const int VOUT = A0;
+
+//Other:
+const int muxChannel[16][4] = {
+	{0,0,0,0}, //C0
+	{0,0,0,1}, //C1
+	{0,0,1,0}, //C2
+	{0,0,1,1},
+	{0,1,0,0},
+	{0,1,0,1},
+	{0,1,1,0},
+	{0,1,1,1},
+	{1,0,0,0},
+	{1,0,0,1},
+	{1,0,1,0},
+	{1,0,1,1},
+	{1,1,0,0},
+	{1,1,0,1},
+	{1,1,1,0},
+	{1,1,1,1}
+	}
+
+void SetChannel(int channel) {
+	digitalWrite(s0, muxChannel[channel][0]);
+	digitalWrite(s1, muxChannel[channel][1]);
+	digitalWrite(s2, muxChannel[channel][2]);
+	digitalWrite(s3, muxChannel[channel][3]);
+	}
+
+float GetVoltage() {
+	value = analogRead(VOUT);
+	voltage = value * 5.0/1023;
+	return voltage;
+}
+
+void PressButton(string buffer){
+	//Set Channel based on buffer
+	switch(buffer) {
+		case 'X':
+			SetChannel(0);
+			break;
+		case 'Y':
+			SetChannel(1);
+			break;	
+		case 'A':
+			SetChannel(2);
+			break;	
+		case 'B':
+			SetChannel(3);
+			break;
+		case 'DU':
+			SetChannel(4);
+			break;
+		case 'DR':
+			SetChannel(5);
+			break;
+		case 'DD':
+			SetChannel(6);
+			break;	
+		case 'DL':
+			SetChannel(7);
+			break;
+		case 'RB':
+			SetChannel(8);
+			break;	
+		case 'LB':
+			SetChannel(9);
+			break;	
+		case 'RT':
+			SetChannel(10);
+			break;
+		case 'LT':
+			SetChannel(11);
+			break;
+		case 'PLUS':
+			SetChannel(12);
+			break;		
+		case 'MINUS':
+			SetChannel(13);
+			break;
+		default:
+			break;
+	}
+	
+	//Press button
+	digitalWrite(SIG, HIGH);
+	delay(250);
+	digitalWrite(SIG, LOW);
+	delay(250);
+}
+
+
+void Setup() {
+	Serial.begin(115200);
+	
+	//MUX
+	pinMode(s0, OUTPUT);
+	pinMode(s1, OUTPUT);
+	pinMode(s2, OUTPUT);
+	pinMode(s3, OUTPUT);
+	pinMode(SIG, OUTPUT);
+	//DIG POT
+	pinMode(CS, OUTPUT);
+	pinMode(UD, OUTPUT);
+	pinMode(INC, OUTPUT);
+	//VOL Sense
+	pinMode(VOUT, INPUT);
+}
+
+
+void main() {
+	while (Serial.available()){
+		char c = Serial.read();
+		
+		//Check for end of message
+		if (c == '\0') {
+		inputBuffer[bufferIndex] = '\0'; 
+		Serial.print("Recieved string: ");
+		Serial.println(inputBuffer);
+		bufferIndex = 0;
+		
+		} 
+		else {
+			if (bufferIndex < BUFFER_SIZE - 1) {
+				inputBuffer[bufferIndex++] = c;
+			}
+			else { //Buffer Overflow Protection
+				Serial.println("Error: input buffer overflow!");
+				bufferIndex = 0; //Reset Buffer
+			}
+		}
+	}
+
+}
