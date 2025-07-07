@@ -1,0 +1,95 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	background: url('bg.jpg') no-repeat;
+	background-size: cover;
+	background-position: center;
+	height: 80%;
+	max-height: 800;
+}
+
+.container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	justify-content: center;
+	width: 60%;
+	max-width: 500px;
+	min-width: 370px;
+	background: transparent;
+	border: 2px solid rgba(255,255,255,.2);
+	backdrop-filter: blur(20px);
+	color: #fff;
+	border-radius: 10px;
+	padding: 30px 40px;
+}
+
+
+.btncontainer {
+	background: transparent;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	justify-content: center;
+	width: 100%;
+	max-width: 800px;
+	border: 2px solid rgba(255,255,255,.2);
+	backdrop-filter: blur(20px);
+	color: #fff;
+	border-radius: 10px;
+	padding: 8px 0 8px;
+}
+
+.btncontainer form {
+	flex: 1 1 calc(25% - 10px);
+	max-width: calc(25% - 10px);
+	box-sizing: border-box;
+	margin: 0 0 0;
+	display: flex;
+	justify-content: center;
+}
+
+.container button {
+	width: 100%;
+	max-width: 200px;
+	height: 30px;
+	border: 2px solid rgba(255,255,255,.8);
+	border-radius: 20px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+	cursor: pointer;
+	font-size: 12px;
+	color: #fff;
+	font-weight: 600;
+	margin: 0;
+	background: transparent;
+	blur: 40px;
+}
+button:hover {
+	background: rgba(255,255,255,.2);
+	transform: scale(1.02);
+}
+button:active {
+	background: rgba(255,255,255,.4);
+	transform: scale(0.98);
+}
+
+
+.headercontainer {
+	background: transparent;
+}
+
+h1 {
+	font-size: 36px;
+	text-align: center;
+	color: #fff;
+	padding: 30px;
+}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Controller</title>
+	<link rel ="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+	<div class="container">
+		<div class="headercontainer">
+			<h1>Controller Buttons</h1>
+		</div>
+		<div class="btncontainer">
+			{% for name, code in buttons.items() %}
+				<form action="{{ url_for('send', code=code) }}" method="get" style="display:inline;">
+					<button type="submit">{{ name.upper() }}</button>
+				</form>
+			{% endfor %}
+		<div/>
+	</div>
+</body>
+</html>
