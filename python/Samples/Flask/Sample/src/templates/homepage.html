@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FieldSetSample</title>
+	<link rel ="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+	<div class="BasicLayouts">
+		<fieldset>
+			<legend>Basic Layouts</Legend>
+			<form action ="/layout1" method="get">
+				<button type="submit" class="button">Layout 1</button>
+			</form>
+			<form action ="/layout2" method="get">
+				<button type="submit" class="button">Layout 2</button>
+			</form>
+			<form action ="/layout3" method="get">
+				<button type="submit" class="button">Layout 3</button>
+			</form>	
+		</fieldset>
+	</div>
+</body>
+</html>
