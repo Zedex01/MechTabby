@@ -15,7 +15,9 @@ def layout1():
 @app.route('/layout2')
 def layout2():
     return render_template('Layout2.html')
-
+@app.route('/layout3')
+def layout3():
+    return render_template('Layout3.html')
     
     
 if __name__ == '__main__':
