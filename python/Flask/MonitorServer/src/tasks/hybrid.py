@@ -46,7 +46,7 @@ EN_REC = os.path.join(BASE_DIR, r'..\temp\EN_REC.flag')
 
 #==================Setup==========================
 #Create the capture device, 0 is the default (integrated webcam.)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(2)
 
 #==================Stream-Config==================
 #Create Webserver app
@@ -164,4 +164,4 @@ def video_feed():
 
 if __name__ == '__main__':
     threading.Thread(target=handle_recording, daemon=True).start()
-    app.run(host='127.0.0.1', port=8080)
+    app.run(host='0.0.0.0', port=8080)

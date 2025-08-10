@@ -20,15 +20,15 @@ class MockSerial:
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 #=========================================================
-PORT = 'COM7'
+PORT = 'COM12'
 BAUDRATE = 115200
 try:
 #Mount Serial Port
     ser = serial.Serial(PORT, BAUDRATE)
 
     time.sleep(2)
-except:
-    print("No Serial Found, Booting Mock")
+except Exception as e:
+    print(f"No Serial Found, Booting Mock: {e}")
     ser = MockSerial()
 #==========================================================
 """
@@ -94,5 +94,5 @@ def send(code):
     
 if __name__ == '__main__':
     #Start Webserver
-    app.run(host='127.0.0.1',port=5000, debug=True) #Only Avaliable on localhost
+    app.run(host='127.0.0.1',port=5000) #Only Avaliable on localhost
 
