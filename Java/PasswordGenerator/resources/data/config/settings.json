@@ -1,0 +1,9 @@
+{
+  "generator_settings": {
+    "instances" : 5,
+    "length" : 12,
+    "letters" : true,
+    "symbols" : true,
+    "numbers" : true
+  }
+}
