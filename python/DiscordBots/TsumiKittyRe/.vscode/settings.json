@@ -2,5 +2,5 @@
     "python.defaultInterpreterPath": "C:/SDKs/Python/Python313/python.exe",
     "python.analysis.extraPaths": [
         "TsumiKittyRe/src"
-    ],
+    ]
 }
