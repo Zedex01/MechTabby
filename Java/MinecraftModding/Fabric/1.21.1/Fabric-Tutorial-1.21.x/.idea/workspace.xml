@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3d4ae946-eade-47d9-9551-66cc314cd8cc" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../../../JavaGuide1.20.x" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../JavaGuide1.20.x" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../python/Flask/ControllerServer/src/ControlServer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../python/Flask/ControllerServer/src/ControlServer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../../python/Flask/ControllerServer/src/SerialToController_Test/SerialToController_Test.ino" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../../python/Flask/ControllerServer/src/SerialToController_Test/SerialToController_Test.ino" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../../.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="326NSUXBZ5htS8GfsfxEU99l8gQ" />
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3d4ae946-eade-47d9-9551-66cc314cd8cc" name="Changes" comment="" />
+      <created>1756737062258</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1756737062258</updated>
+    </task>
+    <servers />
+  </component>
+</project>

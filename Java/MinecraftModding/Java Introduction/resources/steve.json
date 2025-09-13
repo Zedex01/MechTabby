@@ -1,0 +1,17 @@
+{
+  "playerName" : "Steve",
+  "level" : 15,
+  "inventory" : {
+    "weight": 100,
+    "items": [
+      {"name": "Diamond Sword", "durability": 1562},
+      {"name":  "Iron Armor", "protection": 20}
+    ]
+  },
+  "location": {
+    "x": 0,
+    "y": 3,
+    "z": 100
+  },
+  "isCreativeMode": false
+}

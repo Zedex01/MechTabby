@@ -15,13 +15,35 @@
 
  #pyright: ignore[reportMissingImports]
 
-import discord, os
-from client.MyClient import MyClient
+import discord, os, asyncio
+from bot.Bot import Bot
+from commands import *
+from dotenv import load_dotenv
+
+load_dotenv()
 
 TOKEN = os.getenv('TSUMIKITTY_KEY')
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True
 
-client = MyClient(intents=intents)
-client.run(TOKEN)
+bot = Bot(command_prefix="!", intents=intents)
+
+#Setup Env
+
+#Loading modular commands (cogs)
+async def load_extensions():
+    #await bot.load_extension("commands.GetIp")
+    await bot.load_extension("commands.GetServerStatus")
+
+
+# Main Function
+async def main():
+    async with bot:
+        await load_extensions() #Load all command classes
+        await bot.start(TOKEN)
+
+# Launch
+if __name__ == "__main__":
+    asyncio.run(main()) #Start the main Function

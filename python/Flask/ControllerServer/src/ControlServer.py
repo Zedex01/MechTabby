@@ -20,7 +20,7 @@ class MockSerial:
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 #=========================================================
-PORT = 'COM12'
+PORT = 'COM4'
 BAUDRATE = 115200
 try:
 #Mount Serial Port
@@ -33,10 +33,10 @@ except Exception as e:
 #==========================================================
 """
 ====Translation====
-| 14 | D-Up       |
-| 13 | D-Right    |
-| 12 | D-Down     |
-| 11 | D-Left     |
+| 14 | D-Up       | Down
+| 13 | D-Right    | Left
+| 12 | D-Down     | Right
+| 11 | D-Left     | Up
 | 10 | X          |
 | 9  | A          |
 | 8  | B          |
@@ -55,10 +55,10 @@ except Exception as e:
 """
 # Button map (optional for display/future use)
 button_map = {
-    "d-up": "14",
-    "d-right": "13",
-    "d-down": "12",
-    "d-left": "11",
+    "d-up": "11",
+    "d-right": "12",
+    "d-down": "14",
+    "d-left": "13",
     "x": "10",
     "a": "9",
     "b": "8",

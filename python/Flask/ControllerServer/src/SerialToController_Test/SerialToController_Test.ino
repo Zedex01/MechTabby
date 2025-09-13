@@ -122,7 +122,7 @@ void loop() {
         SetTargetVoltage(2.8);
       }
       if (content == "JN") {
-        SetTargetVoltage(1.5);
+        SetTargetVoltage(1.7);
       }
       if (content == "JD") {
         SetTargetVoltage(0.4);
