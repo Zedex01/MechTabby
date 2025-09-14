@@ -8,3 +8,8 @@ class Bot(commands.Bot):
         
     async def on_ready(self):
         print(f'Logged on as {self.user}!')
+    
+    #Displays errors in commands
+    async def on_command_error(self, ctx, error):
+        print(f"Error in command {ctx.command}: {error}")
+        await ctx.send(f"⚠️ Error: {str(error)}")

@@ -36,6 +36,9 @@ bot = Bot(command_prefix="!", intents=intents)
 async def load_extensions():
     #await bot.load_extension("commands.GetIp")
     await bot.load_extension("commands.GetServerStatus")
+    await bot.load_extension("commands.LocateBiome")
+    await bot.load_extension("commands.Exit")
+    await bot.load_extension("commands.Reload")
 
 
 # Main Function
