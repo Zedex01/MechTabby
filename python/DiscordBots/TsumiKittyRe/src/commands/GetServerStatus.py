@@ -3,15 +3,20 @@ import discord, subprocess
 from discord.ext import commands
 from util.Config import Config
 
+logger = logging.getLogger(__name__)
+
 class GetServerStatus(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.cfg = Config()
         
-        
+
     @commands.command(name="server", description="Checks if the server is currently online.")
     @commands.guild_only()
     async def getServerStatus(self, ctx):
+    
+        logger.info(f"{ctx.author} requested server status")
+        
         # === Configs ===
         self.server_name = self.cfg.get_str("Setup", "server_name")
         

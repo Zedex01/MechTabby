@@ -1,12 +1,11 @@
 """ Retrieve Biome Coords """
 import discord
 from discord.ext import commands
-from util.Config import Config
 
-class LocateBiome(commands.Cog):
+class LocateBiome(commands.Cog, cfg: Config):
     def __init__(self, bot):
         self.bot = bot
-        self.cfg = Config()
+        self.cfg = cfg
                
     @commands.command(name="locate", description="Gets the coordinates of the nearest biome of specified type")
     async def getBiomeLocation(self, ctx):

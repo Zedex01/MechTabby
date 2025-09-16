@@ -7,9 +7,9 @@ from util.Config import Config
 class Reload(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.cfg = Config()     
+        self.cfg = Config()  
 
-    @commands.command(name="reload", description="Reloads Tsumikitty Configs.")
+    @commands.command(name="reload", description="Reloads Tsumikitty's configuration files.")
     @commands.is_owner()
     async def reload(self, ctx, cog: str = None):
         

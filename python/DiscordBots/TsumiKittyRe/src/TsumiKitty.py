@@ -13,10 +13,24 @@
 #| Private (internal)  | _single_leading_underscore      | `_helper_method`                    |
 #| Private (mangled)   | __double_leading_underscore     | `__private_var`                     |
 
+#a method or variable prefixed with '_' is a hint to indicate it is 'protected'
+#and should not be accesed from outside the class
+
 import discord, os, asyncio
 from bot.Bot import Bot
 from commands import *
 from dotenv import load_dotenv
+import logging
+from logging.handlers import TimedRotatingFileHandler
+
+
+#Util Imports
+from util.Config import Config
+from util.Server import Server
+
+cfg = Config()
+
+
 
 load_dotenv()
 
@@ -26,22 +40,62 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
+
+#Set command Prefix
 bot = Bot(command_prefix="!", intents=intents)
 
-#Setup Env
+
+#logging Setup
+def setup_logging():
+    # Ensure logs/ directory exists
+    log_dir = cfg.get_str("Logger", "Logs_path")
+    os.makedirs(log_dir, exist_ok=True)
+
+    # Create root logger
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)  # capture everything, handlers will filter
+
+    # Formatter (shared)
+    formatter = logging.Formatter(
+        "[%(levelname)s] [%(asctime)s] %(message)s [%(name)s]",
+        datefmt="%Y-%m-%d %H:%M:%S"
+    )
+
+    # Console handler
+    #console_handler = logging.StreamHandler()
+    #console_handler.setLevel(logging.INFO)  # only show INFO+ in console
+    #console_handler.setFormatter(formatter)
+    #logger.addHandler(console_handler)
+
+    # File handler (daily rotation, keep 50 days)
+    log_file = os.path.join(log_dir, "discord_bot.log")
+    file_handler = TimedRotatingFileHandler(
+        log_file, when="midnight", interval=1,
+        backupCount=50, encoding="utf-8"
+    )
+    file_handler.setLevel(logging.DEBUG)  # keep all details in file
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
+    return logger
+
+#TODO: Add helper method to simplify adding more commands using server, logger and config etc
 
 #Loading modular commands (cogs)
 async def load_extensions():
     await bot.load_extension("commands.GetServerStatus")
-    await bot.load_extension("commands.LocateBiome")
     await bot.load_extension("commands.Exit")
     await bot.load_extension("commands.Reload")
     await bot.load_extension("commands.StartServer")
-    await bot.load_extension("commands.StopServer")
-
+    
+    #MCRCON Commands
+    await bot.load_extension("commands.ListPlayers")
+   
 
 # Main Function
 async def main():
+    logger = setup_logging()
+    logger.info("Tsumikitty is starting")
     async with bot:
         await load_extensions() #Load all command classes
         await bot.start(TOKEN)

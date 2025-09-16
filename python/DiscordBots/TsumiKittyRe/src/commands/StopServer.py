@@ -13,9 +13,10 @@ class StopServer(commands.Cog):
         self.srv = Server()
                
     @commands.command(name="stop_server", description="Stops the server")
+    @commands.is_owner()
     async def stopServer(self, ctx):
         
-        await ctx.send(self.srv.sendCmd("/stop"))
+        await ctx.send(self.srv.sendCmd("stop"))
 
                    
 async def setup(bot):
