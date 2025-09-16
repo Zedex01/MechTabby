@@ -19,7 +19,7 @@ class GetServerStatus(commands.Cog):
         cur_IP = subprocess.check_output("curl ifconfig.me", shell = True, universal_newlines=True)
 
         try:
-            StatReturn = subprocess.check_output('tasklist | find "javaw"', shell=True, universal_newlines=True)
+            StatReturn = subprocess.check_output('tasklist | find "java"', shell=True, universal_newlines=True)
         except:
             StatReturn = ''
         

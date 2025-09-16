@@ -6,14 +6,12 @@
 #Python Style guide:
 #| Item                | Convention                      | Example                             |
 #| ------------------- | ------------------------------- | ----------------------------------- |
-#| Variable / Function | lowercase_with_underscores    | `total_score`, `send_message`       |
+#| Variable / Function | lowercase_with_underscores      | `total_score`, `send_message`       |
 #| Class               | CapWords / PascalCase           | `UserProfile`, `DiscordBot`         |
-#| Constant            | UPPERCASE_WITH_UNDERSCORES    | `MAX_CONNECTIONS`, `DEFAULT_PREFIX` |
-#| Module / Package    | lowercase_with_underscores    | `my_module`, `utils`                |
-#| Private (internal)  | _single_leading_underscore   | `_helper_method`                    |
-#| Private (mangled)   | __double_leading_underscore | `__private_var`                     |
-
- #pyright: ignore[reportMissingImports]
+#| Constant            | UPPERCASE_WITH_UNDERSCORES      | `MAX_CONNECTIONS`, `DEFAULT_PREFIX` |
+#| Module / Package    | lowercase_with_underscores      | `my_module`, `utils`                |
+#| Private (internal)  | _single_leading_underscore      | `_helper_method`                    |
+#| Private (mangled)   | __double_leading_underscore     | `__private_var`                     |
 
 import discord, os, asyncio
 from bot.Bot import Bot
@@ -34,11 +32,12 @@ bot = Bot(command_prefix="!", intents=intents)
 
 #Loading modular commands (cogs)
 async def load_extensions():
-    #await bot.load_extension("commands.GetIp")
     await bot.load_extension("commands.GetServerStatus")
     await bot.load_extension("commands.LocateBiome")
     await bot.load_extension("commands.Exit")
     await bot.load_extension("commands.Reload")
+    await bot.load_extension("commands.StartServer")
+    await bot.load_extension("commands.StopServer")
 
 
 # Main Function
