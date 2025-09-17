@@ -1,9 +1,12 @@
 """ Start Server Command """
-import discord
+import discord, logging
 from discord.ext import commands
 from util.Config import Config
 
 import os, subprocess
+
+logger = logging.getLogger(__name__)
+
 
 class StartServer(commands.Cog):
     def __init__(self, bot):
@@ -12,6 +15,8 @@ class StartServer(commands.Cog):
                
     @commands.command(name="start_server", description="Boots the server")
     async def startServer(self, ctx):
+        logger.info(f"{ctx.author} requested server startup")
+        
         
         # === Configs ===   
         self.start_path = self.cfg.get_str("Setup", "start_path")

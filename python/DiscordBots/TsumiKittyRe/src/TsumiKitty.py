@@ -28,10 +28,6 @@ from logging.handlers import TimedRotatingFileHandler
 from util.Config import Config
 from util.Server import Server
 
-cfg = Config()
-
-
-
 load_dotenv()
 
 TOKEN = os.getenv('TSUMIKITTY_KEY')
@@ -44,6 +40,7 @@ intents.members = True
 #Set command Prefix
 bot = Bot(command_prefix="!", intents=intents)
 
+cfg = Config()
 
 #logging Setup
 def setup_logging():
@@ -53,7 +50,7 @@ def setup_logging():
 
     # Create root logger
     logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)  # capture everything, handlers will filter
+    logger.setLevel(logging.INFO)  # capture everything, handlers will filter
 
     # Formatter (shared)
     formatter = logging.Formatter(
@@ -61,11 +58,11 @@ def setup_logging():
         datefmt="%Y-%m-%d %H:%M:%S"
     )
 
-    # Console handler
-    #console_handler = logging.StreamHandler()
-    #console_handler.setLevel(logging.INFO)  # only show INFO+ in console
-    #console_handler.setFormatter(formatter)
-    #logger.addHandler(console_handler)
+    #Console handler
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)  # only show INFO+ in console
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
 
     # File handler (daily rotation, keep 50 days)
     log_file = os.path.join(log_dir, "discord_bot.log")
@@ -87,8 +84,6 @@ async def load_extensions():
     await bot.load_extension("commands.Exit")
     await bot.load_extension("commands.Reload")
     await bot.load_extension("commands.StartServer")
-    
-    #MCRCON Commands
     await bot.load_extension("commands.ListPlayers")
    
 

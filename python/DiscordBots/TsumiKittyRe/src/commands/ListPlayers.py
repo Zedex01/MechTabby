@@ -17,6 +17,10 @@ class ListPlayers(commands.Cog):
     async def stopServer(self, ctx):
         
         #Sends plaintext output of command as a normal message
+        response = self.srv.sendCmd("list").splitlines()
+        for player in response:
+            print(player)
+        
         await ctx.send(self.srv.sendCmd("list"))
                    
 async def setup(bot):

@@ -19,6 +19,7 @@ class Server:
             output = mcr.command(content)
         return output
             
+#TODO
     def isRunning(self) -> bool:
         with MCRcon("127.0.0.1", self.PASS, port=int(self.PORT)) as mcr:
             output = mcr.command('list')
