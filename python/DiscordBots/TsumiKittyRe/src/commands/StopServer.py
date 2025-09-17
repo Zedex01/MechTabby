@@ -1,10 +1,13 @@
 """ Stop Server Command """
-import discord
+#Imports
+import discord, logging, os, subprocess
 from discord.ext import commands
 from util.Config import Config
 from util.Server import Server
 
-import os, subprocess
+#Setup
+logger = logging.getLogger(__name__)
+
 
 class StopServer(commands.Cog):
     def __init__(self, bot):
@@ -12,10 +15,17 @@ class StopServer(commands.Cog):
         self.cfg = Config()
         self.srv = Server()
                
-    @commands.command(name="stop_server", description="Stops the server")
+    @commands.command(name="stop_server", description="Saves then stops the server.")
     @commands.is_owner()
     async def stopServer(self, ctx):
+        logger.info(f"{ctx.author} requested server shutdown.")
+    
+        #Forces a world save
+        logger.info(f"Saving world")
+        await ctx.send(self.srv.sendCmd("save-all"))
         
+        #Shuts down the server
+        logger.info(f"Shutting down")
         await ctx.send(self.srv.sendCmd("stop"))
 
                    

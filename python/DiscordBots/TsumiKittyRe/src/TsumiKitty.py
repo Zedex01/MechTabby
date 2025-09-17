@@ -45,7 +45,8 @@ cfg = Config()
 #logging Setup
 def setup_logging():
     # Ensure logs/ directory exists
-    log_dir = cfg.get_str("Logger", "Logs_path")
+    log_dir_env_var = cfg.get_str("Logger", "Logs_path_env_var")
+    log_dir = os.getenv(log_dir_env_var)
     os.makedirs(log_dir, exist_ok=True)
 
     # Create root logger
@@ -85,6 +86,8 @@ async def load_extensions():
     await bot.load_extension("commands.Reload")
     await bot.load_extension("commands.StartServer")
     await bot.load_extension("commands.ListPlayers")
+    await bot.load_extension("commands.LinkAccount")
+    await bot.load_extension("commands.Locate")
    
 
 # Main Function
