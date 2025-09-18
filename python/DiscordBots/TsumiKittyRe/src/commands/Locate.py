@@ -32,20 +32,20 @@ class Locate(commands.Cog):
         if not self.srv.isRunning():
             await ctx.send("The server is currently offline, unable to locate.")
             return
-            
+        """
             
         #check if player is online:
-        if not self.srv.isPlayerOnline():
+        if not self.srv.playerOnline(playerName):
             await ctx.send(f"Currently {player.display_name} is not online.")
             return
             
-        """    
+          
         
         #Send a request for players coords to the server
-        #coords = self.srv.sendCmd(f"data get entity {playerName} Pos")
-        
+        coords = self.srv.sendCmd(f"data get entity {playerName} Pos")
+        print(coords)
        
-        coords = [100, 45, 678]
+        #coords = [100, 45, 678]
         
         embed = discord.Embed(
             title=f"📍 **{playerName}**",

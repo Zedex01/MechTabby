@@ -85,6 +85,7 @@ async def load_extensions():
     await bot.load_extension("commands.Exit")
     await bot.load_extension("commands.Reload")
     await bot.load_extension("commands.StartServer")
+    await bot.load_extension("commands.StopServer")
     await bot.load_extension("commands.ListPlayers")
     await bot.load_extension("commands.LinkAccount")
     await bot.load_extension("commands.Locate")

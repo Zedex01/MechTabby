@@ -1,5 +1,5 @@
 """ Start Server Command """
-import discord, logging
+import discord, logging, asyncio
 from discord.ext import commands
 from util.Config import Config
 from util.Server import Server
