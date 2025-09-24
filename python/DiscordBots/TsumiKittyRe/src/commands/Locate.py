@@ -1,5 +1,5 @@
 """ Locate """
-import discord, logging
+import discord, logging, re
 from discord.ext import commands
 from util.Linker import Linker
 from util.Server import Server
@@ -27,31 +27,27 @@ class Locate(commands.Cog):
             await ctx.send(f"{player.display_name}'s account is not linked.")
             return
      
-        """
-        #Check if the server is online
-        if not self.srv.isRunning():
-            await ctx.send("The server is currently offline, unable to locate.")
-            return
-        """
             
         #check if player is online:
         if not self.srv.playerOnline(playerName):
             await ctx.send(f"Currently {player.display_name} is not online.")
             return
             
-          
         
         #Send a request for players coords to the server
-        coords = self.srv.sendCmd(f"data get entity {playerName} Pos")
-        print(coords)
-       
-        #coords = [100, 45, 678]
+        recv = self.srv.sendCmd(f"data get entity {playerName} Pos")
+        recv = re.findall(r"(-?\d+\.\d+)", recv)
+        coords = []
+        for value in recv:
+            coords.append(f"{float(value):.1f}")       
+        
+        coords_formatted = ", ".join(coords)
         
         embed = discord.Embed(
             title=f"📍 **{playerName}**",
              color=discord.Color.blue()
         )
-        embed.add_field(name="Coordinates: ",value=coords, inline=True)
+        embed.add_field(name="Coordinates: ",value=coords_formatted, inline=True)
 
         embed.set_footer(text=f"Requested by {ctx.author}", icon_url=ctx.author.avatar.url if ctx.author.avatar else None)
 

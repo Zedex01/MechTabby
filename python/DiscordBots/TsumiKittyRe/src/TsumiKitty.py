@@ -89,6 +89,8 @@ async def load_extensions():
     await bot.load_extension("commands.ListPlayers")
     await bot.load_extension("commands.LinkAccount")
     await bot.load_extension("commands.Locate")
+    await bot.load_extension("commands.LocateStructure")
+    await bot.load_extension("commands.LogWatcherCog")
    
 
 # Main Function
