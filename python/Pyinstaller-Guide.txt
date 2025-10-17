@@ -1,0 +1,12 @@
+Python Compile Guide:
+
+For a simple single python script:
+
+pyinstaller --onefile <file>.py
+
+Optionally to hide or not hide cmd:
+	--noconsole
+	
+.spec file can be used to include other files in the compiliation
+and data can be used to include photos and such
+

@@ -1,0 +1,12 @@
+#Python Style guide:
+#| Item                | Convention                      | Example                             |
+#| ------------------- | ------------------------------- | ----------------------------------- |
+#| Variable / Function | lowercase_with_underscores      | `total_score`, `send_message`       |
+#| Class               | CapWords / PascalCase           | `UserProfile`, `DiscordBot`         |
+#| Constant            | UPPERCASE_WITH_UNDERSCORES      | `MAX_CONNECTIONS`, `DEFAULT_PREFIX` |
+#| Module / Package    | lowercase_with_underscores      | `my_module`, `utils`                |
+#| Private (internal)  | _single_leading_underscore      | `_helper_method`                    |
+#| Private (mangled)   | __double_leading_underscore     | `__private_var`                     |
+
+#a method or variable prefixed with '_' is a hint to indicate it is 'protected'
+#and should not be accesed from outside the class

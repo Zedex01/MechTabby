@@ -1,0 +1,13 @@
+REGEX:
+. → any character
+\d → digit (0–9)
+\w → word character (letters, numbers, underscore)
+\s → whitespace
++ → one or more
+* → zero or more
+? → optional (zero or one)
+[] → character class (match one of these characters)
+() → grouping
+| → or
+^ → start of string
+$ → end of string
