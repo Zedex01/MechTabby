@@ -1,21 +1,12 @@
-import os
-from pathlib import Path
+from util.App import App
+
 
     
 
 def main():
-    print("WELCOME")
+    app = App()
+    app.mainloop()
 
-    file_path = Path(__file__).parent.resolve().parent / "resources" / "SN-List.txt"
-    print(file_path)
-    path = r'C:\Users\mmoran\Projects\Git-Repos\MechTabby\python\AutoZipper\resources\SN-List'
-    SNs = []
-
-    with open(path, "r") as file:
-        for line in file:
-            SNs.append(line.strip())
-
-    print(SNs)
 
 
 
