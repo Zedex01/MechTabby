@@ -1,0 +1,3 @@
+@ECHO on
+
+Echo doing something...

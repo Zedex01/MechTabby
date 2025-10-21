@@ -2,15 +2,22 @@ from pathlib import Path
 import win32com.client
 import time, random
 import subprocess, os, urllib.parse
+from util.Config import Config
+from util.SevenZip import SevenZip
+
 class Selector:
     def __init__(self):
-        self.c_path = Path(r'C:\Users\mmoran\Desktop\Sandbox\C\Point Clouds')
-        self.d_path = Path(r'C:\Users\mmoran\Desktop\Sandbox\D\Point Clouds')
-
-        #self.path = Path(r'C:\Users\mmoran\Desktop\Sandbox')
+        self.cfg = Config()
+        self.c_path = Path(self.cfg.get_str("paths", "c_pcl"))
+        self.d_path = Path(self.cfg.get_str("paths", "d_pcl"))
+        self.core_count = self.cfg.get_str("move-settings", "multi-thread-core-count")
+        #self.c_path = Path(r'C:\Users\mmoran\Desktop\Sandbox\C\Point Clouds')
+        #self.d_path = Path(r'C:\Users\mmoran\Desktop\Sandbox\D\Point Clouds')
         self.dir_list = []
         self.sn_paths = []
         self.total_files = 1
+        self.d_sn_paths = []
+        
     
 #getters/setters
     def set_path(self):
@@ -25,11 +32,6 @@ class Selector:
         return self.total_files
 
 #functions
-    def gen_list(self):
-        self.dir_list = []
-        for i in range(75):
-            self.dir_list.append(str(random.randint(190000,190400)))
-    
     #Can be called to add a list of dir to be added to the internal list
     def add_to_list(self, list) -> None:
         #print("Appending To List")
@@ -38,7 +40,7 @@ class Selector:
         for line in list:
             self.dir_list.append(line.strip())
 
-
+    #Gets the full path for each of the serial Numbers
     def find_sn_paths(self, c_path, sn_list):
         #return list of path objects for src files
         self.sn_paths = []
@@ -47,13 +49,20 @@ class Selector:
                 if d in sn_list:
                     self.sn_paths.append(Path(root) / d)
 
-    #Generates a new dst path with same structre as source
+    def find_d_sn_paths(self, d_path, sn_list):
+        self.d_sn_paths = []
+        for root, dirs, files in os.walk(d_path):
+            for d in dirs:
+                if d in sn_list:
+                    self.d_sn_paths.append(Path(root) / d)
+                    print(Path(root) / d)
+    #Generates a new dst path with same structure as source
     def get_dst_path(self, src_path, c_base, d_base):
         relative = src_path.relative_to(c_base)
         print(f"Dst: {d_base / relative}")
         return d_base / relative
 
-
+    #Move Folders
     def move_folders(self, popup=None):
         if not self.c_path.exists() or not self.d_path.exists():
             print("ERR: Invalid paths")
@@ -76,6 +85,8 @@ class Selector:
 
             dst_path = self.get_dst_path(sn_path, self.c_path, self.d_path)
             dst_path.parent.mkdir(parents=True, exist_ok=True)
+            self.core_count = self.cfg.get_str("move-settings", "multi-thread-core-count")
+            print(f"Active Cores: {self.core_count}")
 
             subprocess.run([
             "robocopy",
@@ -85,7 +96,7 @@ class Selector:
             "/MOVE",
             "/R:0",
             "/W:0",
-            "/MT:16",
+            f"/MT:{self.core_count}",
             "/NFL",
             "/NDL",
             ])
@@ -97,10 +108,19 @@ class Selector:
         if popup and not popup.cancelled:
             popup.after(0,popup.destroy())
 
-    
-    def filter_dirs(self):
+    def zip_files(self):
         if len(self.dir_list) > 0:
-            #Wrap in ''
+            print("Files Found, Attempting to zip")
+            self.find_d_sn_paths(self.d_path, self.dir_list)
+            sz = SevenZip(self.d_sn_paths)
+            sz.build_archive()
+
+
+
+    def filter_dirs(self):
+        
+        if len(self.dir_list) > 0:
+
             encoded_names = [urllib.parse.quote(f'"{name}"') for name in self.dir_list]
 
             if len(self.dir_list) > 1:
@@ -115,8 +135,3 @@ class Selector:
         else:
             print("Err: No Serial Numbers provided")
 
-
-#sel = Selector()
-#sel.move_folders()
-#sel.gen_list()
-#sel.filter_dirs()
