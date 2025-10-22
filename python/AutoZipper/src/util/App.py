@@ -14,7 +14,7 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("Point Cloud Zipper System")
+        self.title("Point Cloud Zipper")
         #self.geometry("400x500")
         self.center_window(400, 500)
         self.resizable(False, False)
@@ -30,7 +30,7 @@ class App(ctk.CTk):
         self.textbox = ctk.CTkTextbox(self.frame, corner_radius=8, font=("Consolas", 14))
         self.textbox.pack(padx=10, pady=10, fill="both", expand=True)
 
-        self.button = ctk.CTkButton(self.frame, text="Grab & 7Zip", command=self.zip)
+        self.button = ctk.CTkButton(self.frame, text="Grab & Zip", command=self.zip)
         self.button.pack(side="right", pady=10, padx= 10)
 
     def zip(self):

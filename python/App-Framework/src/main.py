@@ -1,7 +1,7 @@
-from util.App import App
+from classes.App import App
 
 def main():
-    app = App()
+    app = Application()
     app.mainloop()
 
 if __name__ == "__main__":
