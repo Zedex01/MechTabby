@@ -4,9 +4,9 @@ Responsible for contact, version# and attributions:
 '''
 
 class AboutPopup(ctk.CTkToplevel):
-    def __init__(self, master, total_files):
+    def __init__(self, master):
         super().__init__(master)
-        self.title("File Transfer")
+        self.title("About")
         self.center_window(400, 150)
         self.resizable(False, False)
 

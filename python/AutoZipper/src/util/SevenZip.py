@@ -2,14 +2,19 @@ import sys, os, re
 import subprocess as sp
 from pathlib import Path
 import threading
+from util.Config import Config
+from datetime import datetime
 
 
 class SevenZip:
     def __init__(self, files):
         self.files = files
         self.seven_zip_path = r'C:/Program Files/7-Zip/7z.exe'
-        self.archive_path = r'C:/Point Clouds/Archive.7z'
-        
+        #self.archive_path = r'C:/Point Cloud Archives/Archive.7z'
+
+        self.cfg = Config()
+        self.archive_root = Path(self.cfg.get_str("paths", "output_path"))
+
         self.volumes = True
         self.volume_size_mb = "1000"
 
@@ -18,9 +23,18 @@ class SevenZip:
 
 # ==== Functions ====
     def build_archive(self):
+        now = datetime.now().strftime("%Y%m%d-%H%M%S")
+
+        #Create Archive Dir
+        archive_dir = self.archive_root / now
+        archive_dir.mkdir(parents=True, exist_ok=True)
+
+        archive_name = f"Archive-{now}.7z"
+        archive_path = archive_dir / archive_name
+
         #Create command
-        self.cmd = [self.seven_zip_path, "a", str(self.archive_path)]
-        self.cmd.extend(self.files)
+        self.cmd = [str(self.seven_zip_path), "a", str(archive_path)]
+        self.cmd.extend(str(f) for f in self.files)
 
         #If Volumes is true, enable them of size defined
         if self.volumes:

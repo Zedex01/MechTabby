@@ -30,7 +30,7 @@ class App(ctk.CTk):
         self.textbox = ctk.CTkTextbox(self.frame, corner_radius=8, font=("Consolas", 14))
         self.textbox.pack(padx=10, pady=10, fill="both", expand=True)
 
-        self.button = ctk.CTkButton(self.frame, text="7-Zip files", command=self.zip)#Don't include the () for the button, otherwise it will be called on creation
+        self.button = ctk.CTkButton(self.frame, text="Grab & 7Zip", command=self.zip)
         self.button.pack(side="right", pady=10, padx= 10)
 
     def zip(self):
