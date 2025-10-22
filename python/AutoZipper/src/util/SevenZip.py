@@ -29,6 +29,7 @@ class SevenZip:
         archive_dir = self.archive_root / now
         archive_dir.mkdir(parents=True, exist_ok=True)
 
+        #Create Archive File name & Path
         archive_name = f"Archive-{now}.7z"
         archive_path = archive_dir / archive_name
 
@@ -36,7 +37,7 @@ class SevenZip:
         self.cmd = [str(self.seven_zip_path), "a", str(archive_path)]
         self.cmd.extend(str(f) for f in self.files)
 
-        #If Volumes is true, enable them of size defined
+        #If Volumes is true, enable them of size specified
         if self.volumes:
             self.cmd.append(f"-v{self.volume_size_mb}m")
 
@@ -44,6 +45,10 @@ class SevenZip:
         self.cmd.extend(["-bsp1", "-bso1"])
 
         self.proc = sp.Popen(self.cmd, text=True, creationflags=sp.CREATE_NEW_CONSOLE)
+    
+
+
+
 
 
 # === Getters & Setters ===

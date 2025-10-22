@@ -51,6 +51,7 @@ class Selector:
 
     def find_d_sn_paths(self, d_path, sn_list):
         self.d_sn_paths = []
+        print(f"Starting Walk of: {d_path}\n Using: {sn_list}")
         for root, dirs, files in os.walk(d_path):
             for d in dirs:
                 if d in sn_list:
@@ -110,10 +111,15 @@ class Selector:
 
     def zip_files(self):
         if len(self.dir_list) > 0:
-            print("Files Found, Attempting to zip")
+            print("List contains content")
             self.find_d_sn_paths(self.d_path, self.dir_list)
-            sz = SevenZip(self.d_sn_paths)
-            sz.build_archive()
+            if len(self.d_sn_paths) > 0:
+                print(f"Found {len(self.d_sn_paths)} Parts. Attempting to zip")
+                #print(self.d_sn_paths)
+                sz = SevenZip(self.d_sn_paths)
+                sz.build_archive()
+            else:
+                print("Could not find paths")
 
 
 
