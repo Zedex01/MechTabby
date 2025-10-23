@@ -20,7 +20,7 @@ class MockSerial:
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 #=========================================================
-PORT = 'COM4'
+PORT = 'COM5'
 BAUDRATE = 115200
 try:
 #Mount Serial Port

@@ -21,6 +21,8 @@ const int s2 = 7;
 const int s3 = 6;
 const int SIG = 5;
 String content;
+
+
 int val;
 const int muxChannel[16][4] = { //{s3, s2, s1, s0}
 	{0,0,0,0}, //C0

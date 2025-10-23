@@ -1,13 +1,6 @@
 import serial, time
 
-class ConCom:
-
-    def __init__(self, port):
-        self.PORT = port
-        self.BAUDRATE = 115200
-        self.input_pause = 1
-        self.ser = None
-        self.button_map = {
+button_map = {
                 "d-up": "11",
                 "d-right": "12",
                 "d-down": "14",
@@ -28,8 +21,18 @@ class ConCom:
                 "jd": "JD",    
         }
 
+class ConCom:
+             
+
+    def __init__(self, port):
+        self.PORT = port
+        self.BAUDRATE = 115200
+        self.input_pause = 1
+        self.ser = None
+
+
         try:
-            self.ser = serial.Serial(PORT, BAUDRATE)
+            self.ser = serial.Serial(self.PORT, self.BAUDRATE)
             time.sleep(2)
 
         except Exception as e:
@@ -57,16 +60,16 @@ class ConCom:
     #Functions
     def connect(self) -> None:
         try:
-            self.ser = serial.Serial(PORT, BAUDRATE)
+            self.ser = serial.Serial(self.PORT, self.BAUDRATE)
             time.sleep(2)
 
         except Exception as e:
             print(f"No Serial Found: {e}")
 
     def send(self, code) -> None:
-        if check_connection():
-            if code.upper() in [v.upper() for v in self.button_map.values()]:
-                self.ser.write((code + '\n').encode())
+        if self.check_connection():
+            if code.lower() in button_map.keys():
+                self.ser.write((button_map[code.lower()] + '\n').encode())
             else:
                 print("ERR: Not a valid key!")
         else:

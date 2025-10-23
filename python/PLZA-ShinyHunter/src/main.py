@@ -74,12 +74,15 @@ def fossil_hunter():
     color_percentage = (mask_pixels / total_pixels) * 100
     print(f"Red color coverage: {color_percentage:.2f}%")
 
-
+def test():
+    controller = ConCom('COM5')
+    print(f"Serial Connection?: {controller.check_connection()}")
+    controller.send("y")
 
 
 def main():
     print("Starting...")
-    fossil_hunter()
+    test()
 
 
 if __name__ == "__main__":
