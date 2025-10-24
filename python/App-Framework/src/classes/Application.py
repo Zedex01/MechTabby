@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
-import time
+import time, subprocess, threading, re
 
 class Application(ctk.CTk): #Application IS a tkinter is an instance
     def __init__(self): #Create a constructor based on super
@@ -12,13 +12,23 @@ class Application(ctk.CTk): #Application IS a tkinter is an instance
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=3)
         self.rowconfigure(0, weight=1)
+        self.rowconfigure(1,weight=1)
 
         frame1 = InputForm(self)
         frame1.grid(row=0,column=0,sticky="nsew",padx=5,pady=5)
         frame2 = InputForm(self)
         frame2.grid(row=0,column=1,sticky="nsew",padx=5,pady=5)
 
+        frame3 = ctk.CTkFrame(self)
+        frame3.grid(row=1,column = 0, columnspan=2, sticky ="nsew",padx=5,pady=5)
+
+        self.login_btn = ctk.CTkButton(frame3, text="Login",command=self.open_login)
+        self.login_btn.grid(row=0,column=0)
+        self.login_btn = ctk.CTkButton(frame3, text="DoTask",command=self.open_task_window)
+        self.login_btn.grid(row=0,column=1)
+
         self.toplevel_window = None
+        self.task_window = None
 
 
     def open_toplevel(self):
@@ -29,6 +39,14 @@ class Application(ctk.CTk): #Application IS a tkinter is an instance
             self.toplevel_window.transient(self) #Keep toplevel over main
         else:
             self.toplevel_window.focus() #Focus already existing window
+
+    def open_task_window(self):
+        if self.task_window is None or not self.task_window.winfo_exists():
+            self.task_window = TaskWindow(self)
+            self.task_window.focus_set()
+            self.task_window.transient(self)
+        else:
+            self.task_window.focus()
 
     def open_login(self):
         if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
@@ -108,10 +126,12 @@ class LoginPopup(ctk.CTkToplevel):
         super().__init__(parent)
 
         self.title("User Login")
-        self.center_window(300,150)
+        self.center_window(325,160)
+        self.resizable(False,False)
 
-        self.columnconfigure(0,weight=1)
-
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
+        
         self.frame = ctk.CTkFrame(self)
         self.frame.grid(row=0,column=0,padx=10,pady=10,sticky="nesw")
 
@@ -133,13 +153,13 @@ class LoginPopup(ctk.CTkToplevel):
 
         #Password Login Row
         self.password_label = ctk.CTkLabel(self.frame,text="Password:",anchor="e")
-        self.password_label.grid(row=1,column=0, sticky="ew", padx=(10,5), pady=(5,10))
+        self.password_label.grid(row=1,column=0, sticky="ew", padx=(10,5), pady=(5,0))
         self.password_entry = ctk.CTkEntry(self.frame, show="*")
-        self.password_entry.grid(row=1, column=1, columnspan=2,sticky="ew", padx=(5,10), pady=(5,10))
+        self.password_entry.grid(row=1, column=1, columnspan=2,sticky="ew", padx=(5,10), pady=(5,0))
 
         #Info row
-        self.info_label = ctk.CTkLabel(self.frame,text="This is a sample notice", bg_color="#f542a7",fg_color="#3818a1")
-        self.info_label.grid(row=2, column=0, columnspan=3,sticky="we",padx=(10),pady=(5,5))
+        self.info_label = ctk.CTkLabel(self.frame,text=None, anchor="w",text_color="#e83427")
+        self.info_label.grid(row=2, column=0, columnspan=3,sticky="we",padx=(10))
 
         #Buttons
         self.button_width = 70
@@ -150,36 +170,51 @@ class LoginPopup(ctk.CTkToplevel):
         self.button_frame.columnconfigure(1,weight=0)
         self.button_frame.columnconfigure(2,weight=0)
 
-        self.cancel_button = ctk.CTkButton(self.button_frame,text="Cancel",width=self.button_width)
-        self.cancel_button.grid(row=0,column=1,padx=(10,5), sticky="e")
-        self.login_button = ctk.CTkButton(self.button_frame,text="Login",width=self.button_width)
-        self.login_button.grid(row=0,column=2,padx=(5,10), sticky="e")
+        self.cancel_button = ctk.CTkButton(self.button_frame,text="Cancel",width=self.button_width,command=self.cancel)
+        self.cancel_button.grid(row=0,column=1,padx=(10,5),pady=5, sticky="e")
+        self.login_button = ctk.CTkButton(self.button_frame,text="Login",width=self.button_width, command=self.attempt_login)
+        self.login_button.grid(row=0,column=2,padx=(5,10), pady=5 ,sticky="e")
 
-
-        #on enter try to login
+        #binds
         self.user_entry.bind("<Return>", command=self.attempt_login)
         self.password_entry.bind("<Return>", command=self.attempt_login)
 
+    def cancel(self, _event=None):
+        self.destroy()
     
     def attempt_login(self, _event=None):
-        user = None
+        self.user = None
         password = None
 
         #Get text from entrywidget
-        user = self.user_entry.get() 
-        password = self.password_entry.get() 
-        
-        #Clear entrys
-        #self.user_entry.delete(0,tk.END)
-        self.password_entry.delete(0,tk.END)
+        self.user = str(self.user_entry.get()) 
+        password = (self.password_entry.get()) 
+        def_color = self.password_label.cget("text_color")
 
-        #place cursor pack in user field
-        #self.user_entry.focus()
+        if self.user == "admin" and password == "mm":
+            self.do_task()
+            self.destroy()
 
+        else:
+            #Highlight content in entry
+            self.password_entry.select_range(0,tk.END)
+    
+            #place cursor pack in password field
+            self.password_entry.focus()
+            #self.update_notice("*Incorrect login information")
+            
+            pause = 250
+            notice = "Invalid Credentials"
+            #Flash in red
+            for i in range(0,4,2):
+                self.after(pause*(i+1), lambda: self.update_notice(notice, "#e83427"))
+                self.after(pause*(i+2), lambda: self.update_notice(notice, def_color))
 
-
-
-
+    def update_notice(self, text, color):
+        self.info_label.configure(text=text, text_color=color)
+    
+    def do_task(self):
+        print(f"Welcome {self.user}!")
 
     def center_window(self, width: int, height: int):
         # Get screen width and height
@@ -191,8 +226,102 @@ class LoginPopup(ctk.CTkToplevel):
         # Apply geometry
         self.geometry(f"{width}x{height}+{x}+{y}")
 
+class TaskWindow(ctk.CTkToplevel):
+    """mainly progress bar stuff"""
+    def __init__(self, parent):
+        super().__init__(parent)
+
+        self.task_running = False
+        self.task_path = r'C:\Users\mmoran\Projects\Git-Repos\MechTabby\python\App-Framework\resources\task.bat'
+        self.proc = None
+        self.percent = 0
+
+        self.title("Task Window")
+        self.center_window(400,300)
+
+        self.percent_label = ctk.CTkLabel(self,text=f"Progress: 0%")
+        self.percent_label.pack(padx=10, pady=10)
+
+        self.content_box = ctk.CTkFrame(self, height=40, width=100)
+        self.content_box.pack(padx=10,pady=10)
+
+        #Progress bar:
+        self.progress_bar = ctk.CTkProgressBar(self, orientation="horizontal", height=20, corner_radius=7)
+
+        self.progress_bar.pack(padx=10,pady=10)
+        self.progress_bar.set(0)
+
+        self.cancel_btn = ctk.CTkButton(self, text="Cancel", command=self.cancel_task)
+        self.cancel_btn.pack(padx=10,pady=10)
+
+        #Start Task on window launch if no other task is running
+        if self.task_running is False:
+            #Setup thread with callback function
+            thread = threading.Thread(target=self.task,args=(self.progress_callback,), daemon=True).start()
+
+    def progress_callback(self, percent):
+        #recieve the parameter from percent
+        #Set global percent value recieve from callback
+        self.percent = percent
+        self.after(100, lambda:self.update())
+
+    def update(self):
+        #update all the important stuff on the gui
+        self.progress_bar.set(self.percent)
+        self.percent_label.configure(text=f"Progress {int(self.percent*100)}%")
+        
+        if self.percent == 1:
+            self.task_running = False
+            self.cancel_btn.configure(text="Finish", command=self.destroy)
+
+    def task(self, callback):
+        self.task_running = True
+        #Create Process and have it redirect output to stdout
+        self.proc = subprocess.Popen(
+            self.task_path, 
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT
+            )
+
+        #Read the stdout from the process
+        for line in self.proc.stdout:
+            line = line.strip()
+            #Get result
+            match = re.search(r'(\d+)%', line)
+            if match:
+                percent = (int(match.group(1))/100)
+                #We call progress_callback giving it percent as an argument
+                callback(percent)
+                
+    def cancel_task(self):
+        #Check if task exists
+        if self.proc is not None:
+            try:
+                self.proc.kill()
+                self.task_running = False
+                print("Task Killed")
+                self.destroy()
+
+            except Exception as e:
+                print(f"Unable to kill: {e}")
 
 
+    def update_task_window(self, percent):
+
+        self.progress_bar.set(percent)
+        
+
+
+    def center_window(self, width: int, height: int):
+        # Get screen width and height
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        # Calculate x and y coordinates for the window
+        x = int((screen_width / 2) - (width / 2))
+        y = int((screen_height / 2) - (height / 2))
+        # Apply geometry
+        self.geometry(f"{width}x{height}+{x}+{y}")
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme('blue')
