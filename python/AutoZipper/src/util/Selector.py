@@ -53,10 +53,14 @@ class Selector:
         self.d_sn_paths = []
         print(f"Starting Walk of: {d_path}\n Using: {sn_list}")
         for root, dirs, files in os.walk(d_path):
+            print(root)
             for d in dirs:
+                print(f"{root} {d}")
                 if d in sn_list:
+                    print(f"found {d}")
                     self.d_sn_paths.append(Path(root) / d)
                     print(Path(root) / d)
+
     #Generates a new dst path with same structure as source
     def get_dst_path(self, src_path, c_base, d_base):
         relative = src_path.relative_to(c_base)
@@ -113,13 +117,20 @@ class Selector:
         if len(self.dir_list) > 0:
             print("List contains content")
             self.find_d_sn_paths(self.d_path, self.dir_list)
+            
             if len(self.d_sn_paths) > 0:
                 print(f"Found {len(self.d_sn_paths)} Parts. Attempting to zip")
+                
+                #Build the zip command and return to main thread
                 #print(self.d_sn_paths)
                 sz = SevenZip(self.d_sn_paths)
-                sz.build_archive()
+                #sz.build_archive()
+                sz.build_cmd()
+                return sz.get_cmd()
+
             else:
                 print("Could not find paths")
+                return None
 
 
 

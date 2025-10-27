@@ -237,22 +237,40 @@ class TaskWindow(ctk.CTkToplevel):
         self.percent = 0
 
         self.title("Task Window")
-        self.center_window(400,300)
+        self.center_window(550,260)
 
-        self.percent_label = ctk.CTkLabel(self,text=f"Progress: 0%")
-        self.percent_label.pack(padx=10, pady=10)
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=0)
 
+        self.resizable(False,False)
+
+        #==== Content Box ====
         self.content_box = ctk.CTkFrame(self, height=40, width=100)
-        self.content_box.pack(padx=10,pady=10)
+        self.content_box.grid(row=0,column=0,padx=10,pady=(10,2),sticky="we")
+
+        self.part_count_label = ctk.CTkLabel(self.content_box, text="# Parts Found", anchor="w")
+        self.part_count_label.grid(row=0,column=0,padx=10,pady=(5,2),sticky="we")
+        self.compressing_label = ctk.CTkLabel(self.content_box,text="Compressing x/y files", anchor="w")
+        self.compressing_label.grid(row=1,column=0,padx=10,pady=(2),sticky="we")
+        self.output_label = ctk.CTkLabel(self.content_box, text="Creating Archive: D:\Point Cloud Archives\20251027-110843\Archive-20251027-110384.7z", anchor="w")
+        self.output_label.grid(row=2,column=0,padx=10,pady=(2,5),sticky="we")
+        
+        #Percent Done 
+        self.percent_label = ctk.CTkLabel(self,text=f"Progress: 0%")
+        self.percent_label.grid(row=1, column=0,padx=10, pady=2,sticky="we")
 
         #Progress bar:
         self.progress_bar = ctk.CTkProgressBar(self, orientation="horizontal", height=20, corner_radius=7)
-
-        self.progress_bar.pack(padx=10,pady=10)
+        self.progress_bar.grid(row=2,column=0,padx=10,pady=5,sticky="we")
         self.progress_bar.set(0)
 
+        #Estimated time remaining
+        self.est_time_label = ctk.CTkLabel(self, text="est. time remaining: ###",anchor="w")
+        self.est_time_label.grid(row=3,column=0,padx=10,pady=2,sticky="we")
+
+        #Cancel Btn
         self.cancel_btn = ctk.CTkButton(self, text="Cancel", command=self.cancel_task)
-        self.cancel_btn.pack(padx=10,pady=10)
+        self.cancel_btn.grid(row=4,column=0,padx=10,pady=10)
 
         #Start Task on window launch if no other task is running
         if self.task_running is False:

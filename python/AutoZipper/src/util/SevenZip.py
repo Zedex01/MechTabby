@@ -47,6 +47,31 @@ class SevenZip:
         self.proc = sp.Popen(self.cmd, text=True, creationflags=sp.CREATE_NEW_CONSOLE)
     
 
+    def build_cmd(self):
+        now = datetime.now().strftime("%Y%m%d-%H%M%S")
+        #Create Archive Dir
+        archive_dir = self.archive_root / now
+        archive_dir.mkdir(parents=True, exist_ok=True)
+
+        #Create Archive File name & Path
+        archive_name = f"Archive-{now}.7z"
+        archive_path = archive_dir / archive_name
+
+        #Create command
+        self.cmd = [str(self.seven_zip_path), "a", str(archive_path)]
+        self.cmd.extend(str(f) for f in self.files)
+
+        #If Volumes is true, enable them of size specified
+        if self.volumes:
+            self.cmd.append(f"-v{self.volume_size_mb}m")
+
+        #Show Progress in cmd
+        self.cmd.extend(["-bsp1", "-bso1"])
+
+    def get_cmd(self):
+        return self.cmd
+
+
 
 
 
