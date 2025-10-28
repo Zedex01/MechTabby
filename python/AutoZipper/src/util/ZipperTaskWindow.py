@@ -4,6 +4,8 @@ from tkinter import ttk
 
 import threading, subprocess, re, datetime
 
+from collections import deque
+
 class ZipperTaskWindow(ctk.CTkToplevel):
     """mainly progress bar stuff"""
     def __init__(self, parent, cmd):
@@ -31,9 +33,14 @@ class ZipperTaskWindow(ctk.CTkToplevel):
 
         #Get task start Time
         self.start_time = datetime.datetime.now()
+        self.last_time = None
         print(self.start_time)
 
         self.dif = []
+
+        #que for tracking avg times
+        self.que = deque(maxlen=10)
+        self.avg = 0
 
         #==== Content Box ====
         self.content_box = ctk.CTkFrame(self, height=40, width=100)
@@ -86,12 +93,24 @@ class ZipperTaskWindow(ctk.CTkToplevel):
         if not self.winfo_exists():
             return
 
-        dif = (datetime.datetime.now() - self.start_time)
+        if self.last_time == None:
+            self.last_time = self.start_time
+
+        #Will keep the most recent 10 values
+        self.que.append(datetime.datetime.now() - self.last_time)
+
+        self.last_time = datetime.datetime.now()
+
+        #Gets the ave time within the que of 10
+        self.avg = sum((delta.total_seconds() for delta in self.que)) / len(self.que)
+        
+        print(f"len: {len(self.que)}")
+        print(f"que: {self.que}")
+        print(f"Avg: {self.avg:.4f}")
 
         #Print out the time differnece between the dif in time and the 
         try:
             dif_per_percent = dif/int(self.display_percent)
-            print(dif_per_percent)
             per_remaining = 100 - self.display_percent
             time_remaining = dif_per_percent*per_remaining
             print(f"Time Left: {time_remaining}")
@@ -106,6 +125,7 @@ class ZipperTaskWindow(ctk.CTkToplevel):
         self.part_count_label.configure(text=f"{self.display_folders} parts found")
         self.compressing_label.configure(text=f"Compressing {self.display_files} files")
         self.output_label.configure(text=f"Creating archive: {self.display_output}")
+        self.est_time_label.configure(text=f"est. time remaining: {(self.avg)*(100-int(self.display_percent))}")
         
         #When complete, set cancel button to say done
         if self.display_percent == 100:
