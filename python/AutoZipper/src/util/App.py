@@ -32,7 +32,7 @@ class App(ctk.CTk):
         self.textbox.pack(padx=10, pady=10, fill="both", expand=True)
 
         self.button = ctk.CTkButton(self.frame, text="Grab & Zip", command=self.zip)
-        self.button.pack(side="right", pady=10, padx= 10)
+        self.button.pack(side="right", pady=10, padx=10)
 
         self.zip_window = None
 

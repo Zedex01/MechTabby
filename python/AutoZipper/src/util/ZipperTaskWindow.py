@@ -30,6 +30,7 @@ class ZipperTaskWindow(ctk.CTkToplevel):
         self.display_folders = 0
         self.display_curr = ""
         self.display_output = ""
+        self.percent_changed = False
 
         #Get task start Time
         self.start_time = datetime.datetime.now()
@@ -41,6 +42,7 @@ class ZipperTaskWindow(ctk.CTkToplevel):
         #que for tracking avg times
         self.que = deque(maxlen=10)
         self.avg = 0
+        self.formatted_time = "00:00:00.00"
 
         #==== Content Box ====
         self.content_box = ctk.CTkFrame(self, height=40, width=100)
@@ -54,7 +56,7 @@ class ZipperTaskWindow(ctk.CTkToplevel):
         self.output_label.grid(row=2,column=0,padx=10,pady=(2,5),sticky="we")
         
         #Percent Done 
-        self.percent_label = ctk.CTkLabel(self,text=f"Progress: 0%")
+        self.percent_label = ctk.CTkLabel(self,text=f"Compressing: 0%")
         self.percent_label.grid(row=1, column=0,padx=10, pady=2,sticky="we")
 
         #Progress bar:
@@ -70,6 +72,9 @@ class ZipperTaskWindow(ctk.CTkToplevel):
         self.cancel_btn = ctk.CTkButton(self, text="Cancel", command=self.cancel_task)
         self.cancel_btn.grid(row=4,column=0,padx=10,pady=10)
 
+        #Run Cancel task on close:
+        self.protocol("WM_DELETE_WINDOW", self.cancel_task)
+
         #Start Task on window launch if no other task is running
         if self.task_running is False:
             #Setup thread with callback function
@@ -79,8 +84,12 @@ class ZipperTaskWindow(ctk.CTkToplevel):
         #recieve the parameter from percent
         #Set global percent value recieve from callback
 
-        # Extract values from dictionary
-        self.display_percent = data["percent"]
+            
+        #Check if the percent has changed
+        if self.display_percent != data["percent"]:
+            self.display_percent = data["percent"]
+            self.percent_changed = True 
+
         self.display_files = data["files"]
         self.display_folders = data["folders"]
         self.display_output = data["output_path"]
@@ -93,39 +102,33 @@ class ZipperTaskWindow(ctk.CTkToplevel):
         if not self.winfo_exists():
             return
 
-        if self.last_time == None:
-            self.last_time = self.start_time
+        #If the percentage has changed run time estimation stuff
+        if self.percent_changed:
 
-        #Will keep the most recent 10 values
-        self.que.append(datetime.datetime.now() - self.last_time)
+            #If first change, set last time to start time
+            if self.last_time == None:
+                self.last_time = self.start_time
 
-        self.last_time = datetime.datetime.now()
+            #Will keep the most recent 10 values
+            self.que.append(datetime.datetime.now() - self.last_time)
+            #Set the last time
+            self.last_time = datetime.datetime.now()
 
-        #Gets the ave time within the que of 10
-        self.avg = sum((delta.total_seconds() for delta in self.que)) / len(self.que)
-        
-        print(f"len: {len(self.que)}")
-        print(f"que: {self.que}")
-        print(f"Avg: {self.avg:.4f}")
-
-        #Print out the time differnece between the dif in time and the 
-        try:
-            dif_per_percent = dif/int(self.display_percent)
-            per_remaining = 100 - self.display_percent
-            time_remaining = dif_per_percent*per_remaining
-            print(f"Time Left: {time_remaining}")
-
-        except Exception as e:
-            print(f"Skipping: {e}")
-        
+            #Gets the ave time within the que of 10
+            self.avg = sum((delta.total_seconds() for delta in self.que)) / len(self.que)
+            
+            #Calculate and format remaining time
+            self.remaining_time = (self.avg)*(100-int(self.display_percent))
+            #self.formatted_time = str(datetime.timedelta(seconds=self.remaining_time))
+            self.formatted_time = f"{int(self.remaining_time // 3600):02}:{int((self.remaining_time % 3600) // 60):02}:{self.remaining_time % 60:05.2f}"
 
         #update all the important stuff on the gui
         self.progress_bar.set(int(self.display_percent)/100)
-        self.percent_label.configure(text=f"Progress {self.display_percent}%")
+        self.percent_label.configure(text=f"Compressing: {self.display_percent}%")
         self.part_count_label.configure(text=f"{self.display_folders} parts found")
         self.compressing_label.configure(text=f"Compressing {self.display_files} files")
         self.output_label.configure(text=f"Creating archive: {self.display_output}")
-        self.est_time_label.configure(text=f"est. time remaining: {(self.avg)*(100-int(self.display_percent))}")
+        self.est_time_label.configure(text=f"est. time left: {self.formatted_time}")
         
         #When complete, set cancel button to say done
         if self.display_percent == 100:
