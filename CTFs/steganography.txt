@@ -1,0 +1,21 @@
+2025-10-29
+
+Steganography
+
+
+Shit is wild.
+
+Essentially, every pixel in an image is made of rgba values represented in binary.
+
+So for example, a single purple pixel can be represented in base 10 as:
+	
+	rgba: 244, 3, 252, 255
+
+and converted to binary, base 2:
+	
+	[11110100, 00000011, 11111100, 11111111]
+
+using this representation, messages can be encoded by replacing the lsb of the rgb channels (not aplha) one pixel at a time. this is done by grabbing the binary representation of the message that you want to encode. inserting one bit into each pixel in order r, g, b, r, g, b	
+
+
+

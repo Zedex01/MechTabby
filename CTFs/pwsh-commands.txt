@@ -1,0 +1,38 @@
+2025-10-29
+
+Using powershell for solving CTFs requires a different set of commands.
+
+to read a file as a hex format: 
+	Format-Hex -Path "C:\path\to\your\file.ext"
+
+
+.PNG files have the same structre every time.
+
+PNG header is always 8 Bytes:
+	89 50 4E 47 0D 0A 1A 0A
+
+Following this it is all chunks. Each chunk is made of 4 parts:
+
+	Length (4 Bytes) 00 00 00 00
+	Type/NAME {IHDR/IDAT} (4 Bytes) 00 00 00 00 
+	Data (Length Bytes) 
+	CHecksum (4 Bytes) 00 00 00 00
+
+	
+	Common PNG Chunks:
+		IHDR - Image Header 49 48 44 52
+		PLTE - Palette
+		IDAT - Image Data
+		tEXt / iTXt / zTXt - Optional Hidden or metadata
+		Other
+
+
+RED:
+	IHDR is 13 Bytes
+	 
+
+
+	exiftool exposes the POEM inside the png. 
+	Reading the poem you can see each line is capitilized and only showing capitalized letters gives us: CHECKLSB
+
+	LSB or least signifigant bit (far right most bit) is common practice for stenogrephy of png images.
