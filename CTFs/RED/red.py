@@ -10,15 +10,17 @@ dir = file.parent
 
 image_path = dir / 'red.png'
 
-steg = Steganography()
-steg.set_image(image_path)
+#Create object and set target image
+steg = Steganography(image_path)
+
+#Extract all the RGBA data from the image
 steg.set_rgba()
-steg.red_only_single_lsb()
-steg.get_ascii()
-steg.output_printable()
-#
-#steg.red_only_single_lsb()
-#print(steg.get_bytes())
-#print(steg.get_dec())
-#print(steg.get_ascii())
+
+#Extract the lsb for all 4 channels
+steg.rgba()
+
+#Print out the ascii results
+ascii = steg.get_ascii()
+print("".join(ascii))
+
 

@@ -1,17 +1,16 @@
 from PIL import Image
 
 class Steganography():
-    def __init__(self):
-        self.image = None
-
-        self.image_height = None
-        self.image_width = None
-
-
+    def __init__(self, image_path=None):
+        if image_path is not None:
+            print("Setting Path on creation")
+            self.set_image(image_path)
+        else:
+            self.image_width = None
+            self.image_height = None
+            self.image = None
         self.rgba_data = None
-
         self.rosl = None
-
         self.bytes = None
         self.ascii = None
         self.dec = None
@@ -33,7 +32,22 @@ class Steganography():
 
         self.bin_to_ascii(self.bytes)
         self.bin_to_dec(self.bytes)
-        
+
+
+    def rgba(self):
+        self.rgba = []
+        #For each value in in the rgba data
+        for val in self.rgba_data:
+            for index in range(4):
+                bit = val[index][-1] 
+                self.rgba.append(bit)
+
+        self._seperate_bits("".join(self.rgba))
+
+        self.bin_to_ascii(self.bytes)
+
+
+
     def _seperate_bits(self, bits: str):
 
         self.bytes = []
@@ -68,11 +82,6 @@ class Steganography():
                 message += char
 
         print(message)
-
-
-tshark -r capture.pcap -Y eapol -T fields \
-  -e frame.number -e wlan.sa -e wlan.da -e wlan.bssid \
-  -e eapol.keydes.keynonce -e eapol.keydes.keymic -E separator=" | "
 
 
 
