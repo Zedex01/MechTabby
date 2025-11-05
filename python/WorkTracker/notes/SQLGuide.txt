@@ -1,0 +1,182 @@
+Basic SQL Guide
+
+Readout data?
+
+SELECT *  - Highlights everything
+
+FROM stars; - highlights everything in the "stars" Table
+
+=== Creating Databases and Tables ===
+
+CREATE db_name; -Creates a db of db_name
+
+USE db_name; -sets as the current working 
+
+- Create a table with columns set of columns
+CREATE TABLE authors(author_name VARCHAR(60), author_email VARCHAR(70), author_pay int )
+
+=== Filtering Data ===
+
+SELECT id, name, age 
+FROM students
+WHERE age >= 10;
+
+- highlights id, name and age parameters from the students table, 
+but only for entries where the age is greater than or equal to 10
+
+=== Get data from specifc columns ===
+Select id, name
+FROM studentes;
+
+=== Filtering with multiple conditions ===
+
+SELECT id, name, age
+FROM students
+WHERE age >= 10 OR name = 'John';
+
+options:
+    OR, AND
+
+=== obtaining NON-Repeated Records ===
+
+SELECT DISTINCT name, color
+
+FROM clothing
+
+- Returns only one of each type of record.
+
+=== Sorting ===
+
+SELECT id, name
+
+FROM animal
+
+ORDER BY name DESC, id;
+
+ - sorts the output based on name and in ascending order.
+   If 2 records share the same name, then it sorts based on id
+
+=== Obtaining without NULL ===
+
+SELECT name, color
+FROM clothing
+WHERE color IS NOT NULL;
+ - Shows results for names and color where there is a color.
+
+=== Sorting 2? ===
+SELECT id, name
+FROM animal
+ORDER BY name;
+
+ - Sorts by default in ascending order aplhabetically
+
+
+ === Joining Values ===
+ SELECT CONCAT (name, ',', category)
+ FROM tab;
+
+ - Takes all names and concats them to
+    their catagory using a ',' as a delimiter
+
+=== Identifying values based on patterns ===
+SELECT id, name
+FROM animal
+WHERE name LIKE '%b%';
+
+=== Mathematical operators ===
+
+SELECT price - discount
+
+FROM product;
+
+
+=== Alias for tables & columns ===
+SELECT c.last_name AS lname, t.name AS city
+
+FROM customer AS t
+
+INNER JOIN city AS t
+    ON c.id = t.customer_id;
+
+ - Use AS to set Aliases
+
+ === Determining averages of a column ===
+
+ SELECT AVG (price)
+
+ FROM product;
+
+ options:
+    AVG, SUM, 
+
+ === Counting Rows ===
+ SELECT COUNT (id)
+ FROM product;
+
+  - Count rows in column 'id' of table 'product'
+
+ === Data Intersections ===
+ SELECT last_name FROM customer
+ INTERSECT
+ SELECT last_name FROM employee;
+
+  - Returns the Intersection of data from both data sets
+
+ === Addition of data from Various Tables ===
+ SELECT last_name FROM customer
+ UNION ALL
+ SELECT last_name FROM employee;
+    - Using UNION without ALL grabs only one of each.
+
+ === Max & MIN ===
+
+ SELECT MAX (price)
+ FROM product;
+
+  options:
+    MIN, MAX
+
+ === REMOVALE OF DATA FROM TABLES ===
+
+ DELETE FROM table1; - Deletes all data in table1
+
+ === Insert data into table ===
+
+ INSERT INTO product (id, name, category)
+
+ VALUES (15, 'bottle', 'kitchen supplies');
+
+  - Inserts new data into a table
+
+ === Updating columns ===
+ UPDATE product SET company = 'XZY';
+
+  - updates every value in the column 'company' to XYZ
+
+
+ === Updated based on filters ===
+ UPDATE product
+ SET name = 'bottle'
+ WHERE id  = 15;
+
+ === Deleting Table ===
+ DROP TABLE table1;
+
+
+ === Database Backup ===
+ BACKUP DATABASE db_name
+
+ TO DISK = "/home/databases/db_name-backup.db";
+
+ === Renaming tables ===
+ sp_RENAME authors authors_renamed;
+
+ === Changing String Case ===
+ SELECT UPPER(auther_name) FROM authors;
+
+ SELECT LOWER(author_name) FROM authors;
+
+ === Verifying if is a number ===
+ SELECT ISNUMERIC (34);
+ 
+ 
