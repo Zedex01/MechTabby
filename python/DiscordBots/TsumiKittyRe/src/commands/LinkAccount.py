@@ -3,9 +3,9 @@
 """
 import discord, os, subprocess, logging
 from discord.ext import commands
-from util.Server import Server
-from util.Config import Config
-from util.Linker import Linker
+from src.util.Server import Server
+from src.util.Config import Config
+from src.util.Linker import Linker
 
 #Setup
 logger = logging.getLogger(__name__)

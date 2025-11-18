@@ -1,8 +1,8 @@
 """ Start Server Command """
 import discord, logging, asyncio
 from discord.ext import commands
-from util.Config import Config
-from util.Server import Server
+from src.util.Config import Config
+from src.util.Server import Server
 
 import os, subprocess
 

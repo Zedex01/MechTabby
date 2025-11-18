@@ -1,7 +1,7 @@
 """ Exit Tsumikitty """
 import discord, subprocess, os
 from discord.ext import commands
-from util.Config import Config
+from src.util.Config import Config
 
 class Exit(commands.Cog):
     def __init__(self, bot):

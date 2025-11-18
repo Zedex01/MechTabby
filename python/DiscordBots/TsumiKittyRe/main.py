@@ -17,16 +17,16 @@
 #and should not be accesed from outside the class
 
 import discord, os, asyncio
-from bot.Bot import Bot
-from commands import *
+from src.bot.Bot import Bot
+from src.commands import *
 from dotenv import load_dotenv
 import logging
 from logging.handlers import TimedRotatingFileHandler
 
 
 #Util Imports
-from util.Config import Config
-from util.Server import Server
+from src.util.Config import Config
+from src.util.Server import Server
 
 load_dotenv()
 
@@ -81,16 +81,16 @@ def setup_logging():
 
 #Loading modular commands (cogs)
 async def load_extensions():
-    await bot.load_extension("commands.GetServerStatus")
-    await bot.load_extension("commands.Exit")
-    await bot.load_extension("commands.Reload")
-    await bot.load_extension("commands.StartServer")
-    await bot.load_extension("commands.StopServer")
-    await bot.load_extension("commands.ListPlayers")
-    await bot.load_extension("commands.LinkAccount")
-    await bot.load_extension("commands.Locate")
-    await bot.load_extension("commands.LocateStructure")
-    await bot.load_extension("commands.LogWatcherCog")
+    await bot.load_extension("src.commands.GetServerStatus")
+    await bot.load_extension("src.commands.Exit")
+    await bot.load_extension("src.commands.Reload")
+    await bot.load_extension("src.commands.StartServer")
+    await bot.load_extension("src.commands.StopServer")
+    await bot.load_extension("src.commands.ListPlayers")
+    await bot.load_extension("src.commands.LinkAccount")
+    await bot.load_extension("src.commands.Locate")
+    await bot.load_extension("src.commands.LocateStructure")
+    await bot.load_extension("src.commands.LogWatcherCog")
    
 
 # Main Function

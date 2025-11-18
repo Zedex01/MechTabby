@@ -3,8 +3,8 @@
 """
 import discord, os, subprocess, logging
 from discord.ext import commands
-from util.Server import Server
-from util.Config import Config
+from src.util.Server import Server
+from src.util.Config import Config
 
 #Setup
 logger = logging.getLogger(__name__)

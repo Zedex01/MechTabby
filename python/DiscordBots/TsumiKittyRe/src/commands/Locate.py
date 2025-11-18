@@ -1,8 +1,8 @@
 """ Locate """
 import discord, logging, re
 from discord.ext import commands
-from util.Linker import Linker
-from util.Server import Server
+from src.util.Linker import Linker
+from src.util.Server import Server
 
 logger = logging.getLogger(__name__)
 

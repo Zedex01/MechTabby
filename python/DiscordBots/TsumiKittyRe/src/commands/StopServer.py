@@ -2,8 +2,8 @@
 #Imports
 import discord, logging, os, subprocess
 from discord.ext import commands
-from util.Config import Config
-from util.Server import Server
+from src.util.Config import Config
+from src.util.Server import Server
 
 #Setup
 logger = logging.getLogger(__name__)

@@ -2,7 +2,7 @@
 
 import discord, os, subprocess, logging, asyncio
 from discord.ext import commands, tasks
-from util.LogWatcher import LogWatcher
+from src.util.LogWatcher import LogWatcher
 
 #Setup
 logger = logging.getLogger(__name__)
