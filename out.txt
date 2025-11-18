@@ -1,0 +1,116 @@
+Compiling Data
+1 Statements Found:
+C:\Users\mmoran\Documents\Other\Test\RBC Savings\Matt Savings Statement-2413 2025-08-15.pdf
+
+Extracting Data to buffer
+==============================0==============================
+RoyalBankofCanada
+P.O.Box4047TerminalA
+TorontoONM5W1L5
+1of2
+*000000K1*
+30801
+-
+-02-3175-1-00-IRH3497640-490_7010647_02001ADPBR
+Your RBC personal banking
+account statement
+FromJuly17,2025toAugust15,2025
+RBPDA10020_7460107_094 E D 017 00913 04351
+MATTHEWMORAN
+Youraccountnumber: 00913-5022413
+KEVINMORAN
+2RUTHERFORDRD
+Howtoreachus: 1-800-ROYAL®1-1
+BRADFORDON L3Z0A6 (1-800-769-2511)
+www.rbcroyalbank.com/deposits
+Summaryofyouraccountforthisperiod
+RBCDaytoDayBankingTM 00913-5022413
+RoyalBankofCanada
+539HOLLANDSTW,BRADFORD,ONL3Z0C1
+YouropeningbalanceonJuly17,2025 $19,975.85
+Totaldepositsintoyouraccount +5,292.66
+Totalwithdrawalsfromyouraccount -3,934.08
+YourclosingbalanceonAugust15,2025 =$21,334.43
+Detailsofyouraccountactivity
+Date Description Withdrawals($) Deposits($) Balance($)
+OpeningBalance 19,975.85
+21Jul ATMwithdrawal-11271042 62.10
+INTERAC-SC-1042 2.00 19,911.75
+22Jul ContactlessInteracpurchase-1761
+DUNLOPBILLIARD 29.95 19,881.80
+23Jul ContactlessInteracpurchase-1923
+TIMHORTONS#16 6.87
+OnlineBankingtransfer-7955 1,559.52 18,315.41
+24Jul Insurance CERTASDIRECT 74.50 18,240.91
+29Jul MiscPayment GOODLIFECLUBS 33.89
+e-Transfersent StevenDay JHA8EW 22.00
+e-Transfersent StevenDay Z5YYBK 22.00
+ContactlessInteracpurchase-6597
+DUNLOPBILLIARD 29.95 18,133.07
+30Jul Mobilechequedeposit-3399 50.00 18,183.07
+OnlineBankingtransfer-2728 1,461.01 16,722.06
+1Aug e-Transferreceived Sierra CAY9Ezmf 500.00 17,222.06
+
+==============================1==============================
+Your RBC personal banking account statement
+FromJuly17,2025toAugust15,2025
+2of2
+40801
+3497640-490_7010647_02001ADPBR
+Detailsofyouraccountactivity-continued
+Date Description Withdrawals($) Deposits($) Balance($)
+PayrollDeposit BLUEWRISTINC 2,371.33
+e-Transfersent LauraMoran LGAFEW 500.00 19,093.39
+5Aug ContactlessInteracpurchase-6552
+DUNLOPBILLIARD 29.45 19,063.94
+11Aug e-Transfersent StevenDay FWSPSR 11.00
+e-Transfersent StevenDay M6T33K 22.00 19,030.94
+12Aug MiscPayment GOODLIFECLUBS 33.89
+ContactlessInteracpurchase-5256
+DUNLOPBILLIARD 29.95 18,967.10
+15Aug PayrollDeposit BLUEWRISTINC 2,371.33
+Monthlyfee 4.00 21,334.43
+ClosingBalance $21,334.43
+Importantinformationaboutyouraccount
+ProtectyourPINandpasswords
+NevershareyourPINwithanyone-includingyourbank,familyorfriends
+CoverthekeypadwhenenteringyourPINinpublic
+Herearefourwaystoprotectyourselfandthepeopleyouloveagainstphonescams:
+a)Don'tpickupifyoudon'trecognizethephonenumber.Ifit'sreallysomeoneyouknowontheotherendoftheline,they'llleaveamessage
+orsendatextexplainingthenatureoftheircall.
+b)Nevergiveawaypersonalinformationtosomeoneyoudon'tknow.Eveniftheyseemhelpfulortrustworthyorclaimtobefromatrusted
+companyoragency.Hangupiftheyrequestpersonaldetailsfromyou.
+c)Bewareofgrandchildimpersonation.Ifanyonecallsclaimingtobeyourgrandchildespeciallyifthey'reaskingyouformoney,acreditcard
+oragiftcardtohelpwithanemergencydon'tfallforit.Hangupandcallyourfamilydirectly.
+d)Don'tbuygiftcardsasaformofpayment.Acommonphonescamisforacallertobuygiftcardsinexchangeforachequeorotherpayment
+ofahigheramount.Legitimatecompanieswillneveraskyoutosettleadebtorpayabillbypurchasinggiftcards.
+StayInformedonTheLatestCyberScams
+https://www.rbc.com/cyber-security/alerts/
+PleasecheckthisAccountStatementwithoutdelayandadviseusofanyerrororomissionwithin45daysofthestatementdate.
+Ifyouoptedtoreceivechequeimages,onlyimagesofthefrontofyourchequeshavebeensenttoyouwiththisAccountStatement.AnimageincludedonthisAccountStatementdoesnot
+indicatethatachequehasbeensuccessfullyprocessedasofthestatementdate.
+Pleaseretainthisstatementforyourrecords.
+TMTrademarksofRoyalBankofCanada.RBCandRoyalBankareregisteredtrademarksofRoyalBankofCanada.
+®Registeredtrade-markofRoyalBankofCanada.RoyalTrustCorporationofCanadaandTheRoyalTrustCompanyarelicenseesofthetrade-mark.
+RoyalBankofCanadaGSTRegistrationNumber:R105248165
+RoyalTrustCorporationofCanadaGSTRegistrationNumber:R104646666
+TheRoyalTrustCompanyGSTRegistrationNumber:R105248264
+
+('Transaction Date', 'Posting Date', 'Activity', 'Amount', 'Transaction Number', 'Account')
+('JUL 21', '', 'ATMwithdrawal', -62.1, '11271042', 'RBC Savings')
+('JUL 21', '', 'INTERAC-SC', -2.0, '1042', 'RBC Savings')
+('JUL 22', '', 'ContactlessInteracpurchase DUNLOPBILLIARD', -29.95, '1761', 'RBC Savings')
+('JUL 23', '', 'ContactlessInteracpurchase TIMHORTONS#16', -6.87, '1923', 'RBC Savings')
+('JUL 23', '', 'OnlineBankingtransfer', -1559.52, '7955', 'RBC Savings')
+('JUL 24', '', 'Insurance CERTASDIRECT', -74.5, '', 'RBC Savings')
+('JUL 29', '', 'MiscPayment GOODLIFECLUBS', -33.89, '', 'RBC Savings')
+('JUL 29', '', 'e-Transfersent StevenDay', -22.0, 'JHA8EW', 'RBC Savings')
+('JUL 29', '', 'e-Transfersent StevenDay', -22.0, 'Z5YYBK', 'RBC Savings')
+('JUL 29', '', 'ContactlessInteracpurchase DUNLOPBILLIARD', -29.95, '6597', 'RBC Savings')
+('JUL 30', '', 'Mobilechequedeposit', 50.0, '3399', 'RBC Savings')
+('JUL 30', '', 'OnlineBankingtransfer', -1461.01, '2728', 'RBC Savings')
+('AUG 05', '', 'ContactlessInteracpurchase DUNLOPBILLIARD', -29.45, '6552', 'RBC Savings')
+('AUG 11', '', 'e-Transfersent StevenDay', -11.0, 'FWSPSR', 'RBC Savings')
+('AUG 11', '', 'e-Transfersent StevenDay', -22.0, 'M6T33K', 'RBC Savings')
+('AUG 12', '', 'MiscPayment GOODLIFECLUBS', -33.89, '', 'RBC Savings')
+('AUG 12', '', 'ContactlessInteracpurchase DUNLOPBILLIARD', -29.95, '5256', 'RBC Savings')
