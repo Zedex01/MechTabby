@@ -91,6 +91,7 @@ async def load_extensions():
     await bot.load_extension("src.commands.Locate")
     await bot.load_extension("src.commands.LocateStructure")
     await bot.load_extension("src.commands.LogWatcherCog")
+    await bot.load_extension("src.commands.Find")
    
 
 # Main Function
