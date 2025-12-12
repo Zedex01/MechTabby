@@ -1,0 +1,10 @@
+^C:\USERS\MMORAN\PROJECTS\GIT-REPOS\MECHTABBY\CPP\UR-ROBOT\BUILD\CMAKEFILES\B4503A93F95AA560F3441E857C4BBB83\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/mmoran/Projects/Git-Repos/MechTabby/cpp/UR-Robot -BC:/Users/mmoran/Projects/Git-Repos/MechTabby/cpp/UR-Robot/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/mmoran/Projects/Git-Repos/MechTabby/cpp/UR-Robot/build/MyProject.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

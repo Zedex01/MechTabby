@@ -1,0 +1,4 @@
+Make one of the earliest tools for building software automation
+
+uses config file called Makefile, to define what .c files are needed and which dependencies exist between them.
+

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\mmoran\Projects\Git-Repos\MechTabby\cpp\UR-Robot\src\connection_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\mmoran\Projects\Git-Repos\MechTabby\cpp\UR-Robot\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{6582F011-D40F-362C-8AA2-48C8B9376772}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

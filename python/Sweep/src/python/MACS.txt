@@ -1,0 +1,19 @@
+MAC Prefix 
+Gocator: a4:ae:11:1e:16:11
+FANUC: 00:E0:E4 
+
+FANUC RBT [???]:
+    IP: 192.168.40.61        
+    MAC: 00:e0:e4:26:b0:9d
+
+UR 5: 
+    IP: 192.168.40.210
+    MAC: 
+
+UR 10:
+    IP: 192.168.40.65
+    MAC: d8:cb:8a:fb:e6:23
+
+INTEL NUC - BW-PC-2206:
+    IP: 192.168.40.213
+    MAC: a4:ae:11:1e:16:11

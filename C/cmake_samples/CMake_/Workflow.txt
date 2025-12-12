@@ -1,0 +1,23 @@
+Workflow is: A. Define the project in CMakeLists.txt.  B.Run CMake to create the Makefile. C. Build your project using Make
+
+
+
+when building:
+
+cd into build, 
+	run cmake ..
+
+this create the makefiles inside of build.
+then, run make:
+	this creates the exe also in build
+
+
+** Depending on PC setup, may need to specify file type. For example:
+
+can create .sln by defualt is you have visual studio. 
+
+to get make files:
+
+	cmake -G "Unix Makefiles" ..
+	
+	
