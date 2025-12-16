@@ -12,8 +12,9 @@ def netbios(ip):
 
     return None
 
-def rev_dns(ip):
-    #Dependant on setup
+def rDNS(ip):
+    #The DNS must be setup on network, 
+    # often not useable on home/non-configured networks
     try:
         return socket.gethostbyaddr(ip)[0]
     except:
@@ -78,7 +79,7 @@ def NBNS(ip):
 
 def port_open(ip, port):
     try:
-        with socket.create_connection((ip, port), timeout=0.5):
+        with socket.create_connection((ip, port), timeout=0.1):
             return True
     except:
         return False
@@ -112,11 +113,11 @@ for sent, recv in result:
 
 print("Avalible Devices:")
 for client in clients:
-    print(f"IP:{client["ip"]}\tMAC:{client["mac"]}")
-    print("Open Ports: ")
+    print(f"IP:{client["ip"]}\tMAC:{client["mac"]}", end ="")
+    print("\tOpen Ports: ", end ="")
     for port in PORTS:
         if port_open(client["ip"], port):
-            print(port, end="")
+            print(f"{port}, ", end="")
     print()
 
 

@@ -99,16 +99,11 @@ def syn_scan(ip, ports):
 
 mac = get_mac(TARGET)
 print("MAC: ", mac)
-d_name = netbios(TARGET)
-if d_name:
-    print("Device Name: ", d_name)
-print("\nPinging device...")
-got_reply = ping(TARGET)
-print("Reply Received: ", got_reply)
 
-if got_reply:
-    print("Checking for open ports...")
-    open_ports = syn_scan(TARGET, PORTS)
-    print("Open ports:")
-    for port in open_ports:
-        print("\t", port)
+#Check that device is pingable
+if not ping(TARGET):
+    print("Host Unreachable...")
+    exit()
+    
+print("go_next!")
+
