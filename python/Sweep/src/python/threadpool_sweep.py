@@ -16,7 +16,7 @@ INTERFACE = os.getenv("ETHER_IFACE")
 conf.iface = INTERFACE
 
 #common ports
-PORTS = [80, 443, 21, 22, 53, 25, 110, 143, 993, 3389, 445, 135, 3306, 1433, 123, 139]
+PORTS = [80, 443, 21, 22,  25, 110, 143, 993, 3389, 445, 135, 3306, 1433, 123, 139, 554, 5900, 1433, 1434, 3306]
 
 #==== FUNCTIONS ====
 def get_devices():
@@ -29,9 +29,10 @@ def get_devices():
     resp = srp(pkt, timeout=2, verbose=False)[0]
     
     for sent, recv in resp:
-        devices.append(recv.psrc)#, recv.hwsrc)
+        devices.append((recv.psrc, recv.hwsrc))
 
     return devices
+
 
 def open_ports(ip):
     open_ports = []
@@ -67,20 +68,67 @@ def nbtstat(ip):
     except:
         return None
 
+# =========================
 
-def handle_functions(ip):
-    data = [ip]
+def load_oui():
+    #Parses oui into a dict
+    oui_dict = {}
+    with open("oui.txt", "r", encoding="utf-8", errors="ignore") as f:
+        for line in f:
+            if "(hex)" in line:
+                parts = line.split()
+                oui = parts[0].replace("-", "").upper()
+                vendor = " ".join(parts[2:])
+                oui_dict[oui] = vendor
+    
+    return oui_dict
+
+def get_vendor(mac, vendors_dict):
+    if not mac:
+        return None
+    
+    prefix = mac.replace(":", "").replace("-", "")[:6].upper()
+
+    return vendors_dict.get(prefix)
+
+
+def handle_functions(ip, mac):
+
+    vendors_dict = load_oui()
+
+    data = [ip, mac]
     ports = open_ports(ip)
-    #name = rDNS(ip)
-    name = nbtstat(ip)
+    vendor = get_vendor(mac, vendors_dict)
+    # === Get pc Name ===
+    name = rDNS(ip)
+
+    if not name:
+        name = nbtstat(ip) #Only works for windows PC works
+
+    data.append(vendor)
     data.append(name)
     data.append(ports)
+
     return data
+
+def print_compact(result):
+    print(result[3], " | ",result[2], " | ",result[0], " | ",result[1], " | ",result[4])
+
+def print_detailed(result): 
+    print("====================================================================================")
+    print("Name: ", result[3])
+    print("Vendor: ", result[2])
+    print("IP: ", result[0])
+    print("MAC: ", result[1])
+    print("Open Ports: ", result[4])
+    print()
 # ==== MAIN ====
 
 #Create the exectuor:
 
-ips = get_devices()
+devices = get_devices()
+
+
 
 start_time = datetime.now()
 
@@ -90,11 +138,18 @@ with ThreadPoolExecutor(max_workers=64) as executer:
     futures = []
 
     #For each ip, submit a request to use afunction
-    for ip in ips:
-        futures.append(executer.submit(handle_functions, ip))
+    for device in devices:
+        ip = device[0]
+        mac = device[1].upper()
+
+        futures.append(executer.submit(handle_functions, ip, mac))
 
     for future in as_completed(futures):
-        print(future.result())
+        result = future.result()
+        print_compact(result)
+
+
+
 
 end_time = datetime.now()
 
