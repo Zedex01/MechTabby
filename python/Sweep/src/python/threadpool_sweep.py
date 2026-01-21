@@ -71,7 +71,6 @@ def nbtstat(ip):
 # =========================
 
 def load_oui():
-    print("Loading Dictionary...")
     #Parses oui into a dict
     oui_dict = {}
     with open("oui.txt", "r", encoding="utf-8", errors="ignore") as f:
@@ -93,8 +92,6 @@ def get_vendor(mac, vendors_dict):
     return vendors_dict.get(prefix)
 
 def handle_functions(ip, mac):
-    print("Handiling for IP ", ip)
-
     data = [ip, mac]
     ports = open_ports(ip)
     vendor = get_vendor(mac, vendors_dict)
