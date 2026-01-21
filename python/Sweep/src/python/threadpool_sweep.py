@@ -97,8 +97,6 @@ def get_vendor(mac, vendors_dict):
 
 def handle_functions(ip, mac):
 
-    vendors_dict = load_oui()
-
     data = [ip, mac]
     ports = open_ports(ip)
     vendor = get_vendor(mac, vendors_dict)
@@ -117,6 +115,9 @@ def handle_functions(ip, mac):
 def print_compact(result):
     print(result[3], " | ",result[2], " | ",result[0], " | ",result[1], " | ",result[4])
 
+def print_csv(result):
+    print(result[3], ", ",result[2], ", ",result[0], ", ",result[1], ", ",result[4])
+
 def print_detailed(result): 
     print("====================================================================================")
     print("Name: ", result[3])
@@ -130,8 +131,7 @@ def print_detailed(result):
 #Create the exectuor:
 
 devices = get_devices()
-
-
+vendors_dict = load_oui()
 
 start_time = datetime.now()
 
