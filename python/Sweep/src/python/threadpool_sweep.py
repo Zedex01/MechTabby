@@ -30,9 +30,6 @@ def get_devices():
     
     for sent, recv in resp:
         devices.append((recv.psrc, recv.hwsrc))
-        pair = (recv.psrc, recv.hwsrc)
-
-        devices.append(pair)
 
     return devices
 
@@ -74,6 +71,7 @@ def nbtstat(ip):
 # =========================
 
 def load_oui():
+    print("Loading Dictionary...")
     #Parses oui into a dict
     oui_dict = {}
     with open("oui.txt", "r", encoding="utf-8", errors="ignore") as f:
@@ -94,8 +92,8 @@ def get_vendor(mac, vendors_dict):
 
     return vendors_dict.get(prefix)
 
-
 def handle_functions(ip, mac):
+    print("Handiling for IP ", ip)
 
     data = [ip, mac]
     ports = open_ports(ip)
@@ -132,11 +130,10 @@ def print_detailed(result):
 
 devices = get_devices()
 vendors_dict = load_oui()
-
 start_time = datetime.now()
 
 #max_workers is max # of threads, for lan sockets:(50-64)
-with ThreadPoolExecutor(max_workers=64) as executer:
+with ThreadPoolExecutor(max_workers=128) as executer:
     #futures contains the results of everything
     futures = []
 
