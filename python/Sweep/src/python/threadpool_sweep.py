@@ -29,7 +29,13 @@ def get_devices():
     resp = srp(pkt, timeout=2, verbose=False)[0]
     
     for sent, recv in resp:
+<<<<<<< HEAD
         devices.append((recv.psrc, recv.hwsrc))
+=======
+        pair = (recv.psrc, recv.hwsrc)
+
+        devices.append(pair)
+>>>>>>> e263af8046a0aff4c58c0ad27c93845f9b1134ea
 
     return devices
 
