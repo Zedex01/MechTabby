@@ -1,0 +1,95 @@
+Leftover methods:
+
+
+	#Next
+	#cmd = {
+    #"id": 5,
+    #"method": "DOM.querySelectorAll",
+    #"params": {
+    #    "nodeId": doc["result"]["root"]["nodeId"],
+    #    "selector": "input, textarea"
+    #    }
+    #}
+#
+	#ws.send(json.dumps(cmd))
+#
+	#while True:
+	#	msg = json.loads(ws.recv())
+#
+	#	#Ignore Events:
+	#	if "method" in msg:
+	#		continue
+#
+	#	if msg.get("id") == 5:
+	#		node_ids = msg["result"]["nodeIds"]
+	#		break
+#
+	#print(node_ids)
+	#exit()
+#
+	#resp = ws.recv()
+	#print(resp)
+
+	#inputs = json.loads(resp)["result"]["nodeIds"]
+
+	#print(inputs)
+
+
+		#print(resp)
+
+	#Get Page Tree Frame:
+	cmd = {
+		"id" : 2, #Unique for each command
+		"method": "Page.getFrameTree",
+		"params": {
+			"url":"https://osap.gov.on.ca/OSAPSecurityWeb/public/login.xhtml"
+		}
+	}
+
+	#Send it:
+	ws.send(json.dumps(cmd))
+
+	#Read Response:
+	resp = ws.recv()
+
+	print("DOM.ENABLE:")
+
+	#Enable DOM domain?
+	cmd = {"id" : 3, "method": "DOM.enable"}
+	ws.send(json.dumps(cmd))
+	resp = ws.recv()
+
+	# Get document root of a frame
+	cmd = {"id": 4, "method": "DOM.getDocument", "params": {"depth": -1, "pierce": True}}
+	ws.send(json.dumps(cmd))
+
+	#Wait for proper response
+	while True:
+		doc = json.loads(ws.recv())
+		if doc.get("id") == 4:
+			break
+
+	print("Doc Headers")
+	for header in doc:
+		print(header)
+
+	#print(doc)
+
+	cmd = {
+  	"id": 5,
+  	"method": "DOM.querySelector",
+  	"params": {
+    	"nodeId": doc["result"]["root"]["nodeId"], #Uses the nodeId of the document root
+    	"selector": "input[name=\"loginForm:username\"]"
+  		}
+	}
+
+	ws.send(json.dumps(cmd))
+
+	while True:
+		user_id = json.loads(ws.recv())
+		if user_id.get("id") == 5:
+			break
+
+	print("Form user ID: ",user_id["result"]["nodeId"])
+
