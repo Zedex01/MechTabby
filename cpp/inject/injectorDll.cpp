@@ -2,6 +2,7 @@
 
 #include <windows.h>
 #include <iostream>
+#include <filesystem>
 
 //status symbols
 const char* k = "[+] ";
@@ -15,11 +16,19 @@ HMODULE hKernel32 = NULL;
 HANDLE hProcess, hThread = NULL;
 
 //Path to dll
-wchar_t dllPath[MAX_PATH] = L"D:\\Matt\\Projects\\Git-Repos\\MechTabby\\cpp\\inject\\payload.dll";
+wchar_t dllPath[MAX_PATH] = L"C:\\Users\\mmoran\\Projects\\Git-Repos\\MechTabby\\cpp\\inject\\payload.dll";
 size_t dllPathSize = sizeof(dllPath);
 
 
 int main(int argc, char* argv[]){
+	
+	//Check for dll path
+	if (std::filesystem::exists(dllPath) == false) {
+		std::cout << e << "dll not found. error: " << GetLastError() << std::endl;
+		return 1;
+	}
+
+
 	//PID supply, check there are more than 2 arguments
 	if (argc < 2) {
 		std::cout << e << "Useage: program.exe <PID>" << std::endl;

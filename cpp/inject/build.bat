@@ -1,13 +1,13 @@
 @echo off
 
 cd /d %~dp0
-
+@echo on
 ::clean old build
 IF EXIST payload.dll ( del payload.dll )
-::IF EXIST main.exe ( del main.exe )
+IF EXIST injector.exe ( del injector.exe )
 
 ::build dll
-g++ payload.cpp -shared -o payload.dll
+g++ -m64 payload.cpp -shared -o payload.dll
 
 ::build Main
-g++ injectorDll.cpp -o injector.exe
+g++ -m64 injectorDll.cpp -o injector.exe
