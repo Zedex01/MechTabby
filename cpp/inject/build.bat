@@ -10,4 +10,4 @@ IF EXIST payload.dll ( del payload.dll )
 g++ payload.cpp -shared -o payload.dll
 
 ::build Main
-g++ shellInjector.cpp -o injector.exe
+g++ injectorDll.cpp -o injector.exe

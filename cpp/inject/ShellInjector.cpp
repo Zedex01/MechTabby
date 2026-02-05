@@ -8,8 +8,11 @@ const char* k = "[+] ";
 const char* i = "[*] ";
 const char* e = "[-] ";
 
+const int payload_bytes = 89567;
+
 //Every process has an id: PID
 DWORD PID = NULL;
+LPVOID rBuffer = NULL;
 HANDLE hProcess, hThread = NULL;
 
 //cpp style
@@ -42,8 +45,23 @@ int main(int argc, char* argv[]){
 
 	std::cout << k << "Got Process handle: " << hProcess << std::endl;
 
-	//Alocate bytes into memory:
 
+
+	//Allocate bytes to proccess memory:
+	rBuffer = VirtualAllocEx(
+	 	hProcess, //Process handle
+	 	NULL, 
+	 	payload_bytes, //Size of reserve
+	 	(MEM_COMMIT | MEM_RESERVE), 
+	 	PAGE_EXECUTE_READWRITE); //Memory Permisson
+
+	std::cout << i << "Allocated " << payload_bytes << " bytes with rwx permission. " << std::endl;
+
+	//Write Procces Memory
+	//WriteProcessMemory(hProcess, rBuffer, payload, payload_bytes, NULL);
+
+
+	
 
 
 	return 0;
