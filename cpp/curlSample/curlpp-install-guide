@@ -1,0 +1,18 @@
+You need a windows pkg installer: 
+
+create a folder for vcpkg:
+
+	ex: mkdir C:\dev\
+
+Clone and build:
+	git clone https://github.com/microsoft/vcpkg
+	cd vcpkg
+	bootstrap-vcpkg.bat
+
+Install Curlpp:
+	vcpkg install curlpp:x64-windows
+
+Create bin for binaries:
+	mkdir C:\dev\vcpkg\installed\x64-windows\bin
+
+Build away!
