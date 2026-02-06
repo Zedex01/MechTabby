@@ -8,7 +8,16 @@ def main():
 
     #Create simpleSQL instance and try to connect
     sql = SimpleSQL(pm.get_database_path())
-    print("Success")
+    
+    #sql.create_table()
+
+    sql.add_entry("2026-01-22", "Autotool", 4.0, None, "Office", "Assisting Chris & Dean, Troubleshooting old system network issues.")
+
+    #tables = sql.get_tables()
+    #print(tables)
+    #print("DATA:")
+    #sql.get_all()
+
 
 
 def info_popup(text):

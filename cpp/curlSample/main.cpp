@@ -2,29 +2,61 @@
 #include <iostream>
 #include <windows.h>
 
-#include <curlpp/cURLpp.hpp>     // Core curlpp initialization / cleanup
-#include <curlpp/Options.hpp>     // For setting options like URL, POST data, headers
-#include <curlpp/Easy.hpp>        // Optional, Easy request interface (often included via CURLpp.hpp)
+#include <curl/curl.h>
 
-//Examples can be found here: https://github.com/jpbarrette/curlpp/tree/master/examples
-//using namespace curlpp::options;
+//status symbols
+const char* k = "[+] ";
+const char* i = "[*] ";
+const char* e = "[-] ";
 
+
+void WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
+	std::cout << i << "callback fired" << std::endl;
+}
 
 int main(int argc, char* argv[]){
 
-	std::cout << "Hello, World!" << std::endl;
+	//CURL C
+	CURL* curl = curl_easy_init();
 
-	//const char* url[] = "http://localhost:5000/upload"
+	if (curl) {
+		std::cout << k << "libcurl linked succesfully!" << std::endl;
+		
+		CURLcode result;
 
-	//char data[] = "{\"name\" : \"Matt\", \"Age\": 24}"
+		//Set the URL
+		curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:5000/upload");
 
-	//create the request object:
-	curlpp::Easy request;
+		//Set as a POST request:
+		curl_easy_setopt(curl, CURLOPT_POST, 1L);
 
-	//Set url:
-	//request.setOpt<curlpp::options::Url>("http://localhost:5000/upload");
+		//Set Callback:
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 
-	//perform the request:
-	//request.perform();
+		//Set Headers:
+		struct curl_slist* headers = nullptr;
+		headers = curl_slist_append(headers, "Content-Type: application/json");
+		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+		//Set Body
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "{\"name\": \"Matt\", \"Age\": 24}");
+
+		//make resquest
+		result = curl_easy_perform(curl);
+
+
+		if (result != CURLE_OK) {
+			std::cout << e << "Request Failed: " << curl_easy_strerror(result) << std::endl;
+		} else {
+			std::cout << k << "POST sent succesfully!" << std::endl;
+
+		}
+
+		curl_easy_cleanup(curl);
+	}
+
+	return WN_SUCCESS;
+
+
 
 }

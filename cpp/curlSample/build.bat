@@ -8,11 +8,22 @@ IF EXIST main.exe ( del main.exe )
 echo Building...
 
 ::build Main
-g++ -Wno-deprecated-declarations -m64 main.cpp ^
--I C:\dev\vcpkg\installed\x64-windows\include ^
--L C:\dev\vcpkg\installed\x64-windows\lib\curlpp.lib ^
--lcurlpp -lcurl ^
--o main.exe
+g++ -w -DCURL_STATICLIB -m64 ^
+main.cpp -o main.exe ^
+-L .\dep\curl\lib ^
+-I .\dep\curl\include ^
+-lcurl ^
+-lssl -lcrypto ^
+-lnghttp2 -lnghttp3 -lngtcp2 -lngtcp2_crypto_libressl ^
+-lssh2 ^
+-lpsl ^
+-lwldap32 ^
+-lsecur32 ^
+-liphlpapi ^
+-lnormaliz ^
+-lz -lbrotlidec -lbrotlicommon -lzstd ^
+-lws2_32 -lcrypt32 -lbcrypt -lwinmm -luser32
 
-echo Build Success!
+::Check for errors
+if %ERRORLEVEL% == 0 (echo Build Success!)
 echo =======================
