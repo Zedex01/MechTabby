@@ -59,10 +59,7 @@ void addEvent(std::string key, bool mods[], int time){
 
 	//{k: '1', t: 4981483}
 
-	json event = {
-		{"k", key},
-		{"t", time}
-	};
+	json event = {{"k", key},{"t", time}};
 
 	//Check for output file
 	if (fs::exists(pOut)){

@@ -78,25 +78,19 @@ int main (int argc, char* argv[]){
 
 	std::cout << "Version: " << rawData["version"] << std::endl;
 
+	std::string sBuffer;
+
+
 	//itter through all events:
 	for (const json& event : rawData["events"]){
 		//Print info from that event:
-		std::cout << "================================================" << std::endl;
-		std::cout << event["id"] << std::endl;
-		std::cout << event["code"] << std::endl;
-		if ((bool)event["mods"]["shft"] == true) {std::cout << "[SHIFT]" << std::endl;}
-		if ((bool)event["mods"]["ctrl"] == true) {std::cout << "[CTRL]" << std::endl;}
-		if ((bool)event["mods"]["alt"] == true) {std::cout << "[ALT]" << std::endl;}
-		//std::cout << event["time"] << std::endl;
+		sBuffer = event["k"];
+
+		sBuffer.erase(std::remove(sBuffer.begin(), sBuffer.end(), '"'), sBuffer.end());
+
+		std::cout << sBuffer;
+
 	}
-
-
-
-	//write test:
-	std::ofstream out(pOut);
-	out << "Hello, World!";
-	out.close();
-
 
 }
 
