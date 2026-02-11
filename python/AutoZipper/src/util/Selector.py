@@ -5,6 +5,13 @@ import subprocess, os, urllib.parse
 from util.Config import Config
 from util.SevenZip import SevenZip
 
+#For Popup
+import ctypes
+
+MB_OK = 0x00000000
+MB_ICONERROR = 0x00000010
+MB_TASKMODAL = 0x00002000  # blocks interaction with the current app
+
 class Selector:
     def __init__(self):
         self.cfg = Config()
@@ -113,6 +120,7 @@ class Selector:
         if popup and not popup.cancelled:
             popup.after(0,popup.destroy())
 
+
     def zip_files(self):
         if len(self.dir_list) > 0:
             print("List contains content")
@@ -130,6 +138,8 @@ class Selector:
 
             else:
                 print("Could not find paths")
+                #Display a popup window to the user
+                ctypes.windll.user32.MessageBoxW(0, "No pointclouds found.", "AutoZipper", MB_OK | MB_ICONERROR | MB_TASKMODAL)
                 return None
 
 

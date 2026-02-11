@@ -8,6 +8,13 @@ from util.ProgressPopup import ProgressPopup
 from util.AboutPopup import AboutPopup
 import threading
 
+#For Message Box
+import ctypes
+MB_OK = 0x00000000
+MB_ICONERROR = 0x00000010
+MB_TASKMODAL = 0x00002000  # blocks interaction with the current app
+#MB_OK | MB_ICONERROR | MB_TASKMODAL
+
 from util.ZipperTaskWindow import ZipperTaskWindow
 
 ctk.set_appearance_mode("dark")
@@ -47,12 +54,15 @@ class App(ctk.CTk):
 
         #If There are no items in list, return
         if len(content) == 0:
+            #Display a popup window to the user
+            ctypes.windll.user32.MessageBoxW(0, "No serial numbers provided.", "AutoZipper", MB_OK | MB_ICONERROR | MB_TASKMODAL)
             return
 
         #Create Selector Object
         sel = Selector()
         sel.add_to_list(content_list)
         cmd = sel.zip_files()
+        print("[*] sel.zip_files done")
         #Open Zipper Window, pass built cmd to window
         if cmd is not None:  
             if self.zip_window is None or not self.zip_window.winfo_exists():
@@ -62,8 +72,7 @@ class App(ctk.CTk):
             else:
                 self.zip_window.focus() 
         else:
-            print("No Files Found")
-
+            print("[-] cmd is None")
 
 
 
