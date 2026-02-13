@@ -22,6 +22,9 @@ fs::path pOut;
 
 std::string sOutputFileName = "fileout";
 
+//Set time seperator (ms)
+const int timeout = 5000;
+
 //Useage:
 //	a.exe <input file> [-o <output file>](optional)
 
@@ -79,16 +82,26 @@ int main (int argc, char* argv[]){
 	std::cout << "Version: " << rawData["version"] << std::endl;
 
 	std::string sBuffer;
-
+	int last_time = NULL;
+	int this_time = NULL;
 
 	//itter through all events:
 	for (const json& event : rawData["events"]){
 		//Print info from that event:
 		sBuffer = event["k"];
+		this_time = event["t"];
 
-		sBuffer.erase(std::remove(sBuffer.begin(), sBuffer.end(), '"'), sBuffer.end());
+		if (last_time != NULL){
+			if ((this_time - last_time) >= timeout){
+				std::cout << "\n=========================" << std::endl;
+			}
+		}
+
+		//sBuffer.erase(std::remove(sBuffer.begin(), sBuffer.end(), '"'), sBuffer.end());
+		last_time = this_time;
 
 		std::cout << sBuffer;
+
 
 	}
 

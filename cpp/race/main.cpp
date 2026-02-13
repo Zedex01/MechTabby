@@ -64,7 +64,7 @@ void OpenPopup(){
 	gHook = SetWindowsHookEx(WH_CBT, CBTProc, nullptr, GetCurrentThreadId());
 
 	//create popup
-	MessageBoxW(NULL, L"Hey, Listen!", L"RACE!", MB_OK | MB_ICONWARNING | MB_TOPMOST);
+	MessageBoxW(NULL, L"OMG YOUR COMPUTER HAS A VIRUS!!!!", L"RACE!", MB_OK | MB_ICONERROR | MB_TOPMOST);
 }
 
 // ===== MAIN =====
@@ -94,10 +94,12 @@ int main (int argc, char* argv[]) {
 	auto start = std::chrono::high_resolution_clock::now();
 
 	//Open i amount of popups!
-	for (int i = 0; i < 50; i++){
+	for (int i = 0; i < 250; i++){
 		//create lambda threads and add them		
 		threads.emplace_back(OpenPopup);
-		Sleep(10);
+		std::cout << "Popup: " << i << std::endl;
+
+		Sleep(130);
 	}
 
 	//Now wait for all threads to finish:
