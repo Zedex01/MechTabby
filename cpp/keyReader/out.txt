@@ -1,0 +1,73 @@
+[UKN|91]spo[\b][\r]
+=========================
+[UKN|255][UKN|255]
+=========================
+F122
+=========================
+F128[\b]2[\b]3[\b]2
+=========================
+Cam=[\b][\b][\b][\b]F128
+=========================
+F128
+=========================
+Cam2[\b]3_128
+=========================
+Cam3_128
+=========================
+Okay so i was trying to set this up pl[\b][\b]locally, and the 2 new points worked fine, but the renamed one is kinda weird[\r]
+=========================
+i don't [\b] see a way[\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b]oh wait a minute[\r]
+=========================
+Cam3_122[\b]8
+=========================
+[\b]
+=========================
+Cam3_128[\b]2[\b]8
+=========================
+Okay got it[\r]it was stl[\b]ill yellow and i couldn't get the point to connected, but then I rememebered i have to rename the existing point and it keeps the refrence[\r]
+=========================
+[<-][\b][\r]
+=========================
+that fixed t[\b]it[\r]
+=========================
+hmmm that would be from cxm in this case[\r]either way[\r]this did work[\r]so i wont overcomplicate it[\r]
+=========================
+LH31 Purge over
+=========================
+Yea, I did that [\r]we good there[\r]it was just renaming the existing point that I o[\b]forgot to do[\r]its actually simplier since the names are techinically nt[\b][\b]not the same either, so i don't have to work [\b][\b]ry about overlap[\r]its cam1_122 and the new po[\b][\b][\b][\b]w point is cam3_122 so its easy[\r]
+=========================
+[\r][\r]Enable Save to DB on points:[\r]Cam1_122[\r]Cam1_123[\r]Cam3_128[\r][\r]
+=========================
+Part setup feature summary[<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][->] ->[\/][->][->][->][->][->][->][->][->][->][->][->][->][->][->][->][->][->][->][->][\r][\r]now re[\b][\b]fix name:[\r]Part[\b][\b][\b][\b]rename Cam1_128[\b]2 to Cam [\b]3[<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][\b]3[->][->][->][->][->][->][->][->][->][->][->][->][->]_128 in sxm da[\b]b[\r][\r]save to part[\r]save to part[\r][\r]diab[\b][\b]sable save [\b]d to DB on point again[\b][\b][\b][\b][\b][\b]s again[\r][\r][\r]
+=========================
+[UKN|91]comx[\r]
+=========================
+[\r][\r][\r]
+=========================
+admin[\t]mm[\r][\r]
+=========================
+[UKN|107]
+=========================
+[\r][\r]//Read in 
+=========================
+[\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b][\b]
+=========================
+
+=========================
+
+=========================
+7z x .\com[\t] .\C:\Pro[\t][\b][\b][\b][\b][\b][\b][\b][\b]C:\Pr[\t]
+=========================
+comx[\b]X[\t][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-][<-]-o[\r]A[\r]
+=========================
+[/\][\r]A[\r]
+=========================
+comx[\t][\t][\b][\b][\b][\b][\r]
+=========================
+[->][->][->][\r][\r]
+=========================
+[UKN|107]
+=========================
+admin[\t]mm[\r]
+=========================
+

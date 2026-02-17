@@ -19,6 +19,7 @@ const char* i = "[*] ";
 const char* e = "[-] ";
 
 fs::path pOut;
+fs::path pIn;
 
 std::string sOutputFileName = "fileout";
 
@@ -47,19 +48,28 @@ fs::path getSelfPath(){
 // ==== Main ====
 int main (int argc, char* argv[]){
 	
-	//Catch imrpoper arg use
+	//Catch improper arg use
 	if (argc < 2 || argc == 3 || argc > 4){
 		std::cout << e << "Improper use of arguments." << std::endl;
 		return 1;
 	}
 
+	//Set Input path:
+	pIn = (getSelfPath()).parent_path() / std::string(argv[1]);
 
+	//Check input path exists
+	if (!fs::exists(pIn)){
+		std::cout << e << "Input file not found: " << pIn << std::endl;
+		return 1;
+	}
+	std::cout << k << "Input file found: " << pIn.filename() << std::endl;
 
 	//Create a default outputfile
 	if (argc == 2) {
-		//get ref to output file:
+		//set output path:
 		pOut = (getSelfPath()).parent_path() / sOutputFileName;
 	}
+
 	//Use custom output file
 	else if (argc == 4) {
 		//Check for proper arg useage
@@ -68,22 +78,27 @@ int main (int argc, char* argv[]){
 			return 1;
 		}
 
-		//build output file path:
+		//set output path:
 		pOut = (getSelfPath()).parent_path() / std::string(argv[3]);
 	}
-
 
 	//Get data 
 	json rawData;
 
-	std::ifstream in("sample.json");
+	//Set Output Stream
+	std::ofstream out(pOut);
+
+	//Set Input Stream
+	std::ifstream in(pIn);
+
+	//Read in data from input:
 	in >> rawData;
 
 	std::cout << "Version: " << rawData["version"] << std::endl;
 
 	std::string sBuffer;
-	int last_time = NULL;
-	int this_time = NULL;
+	int last_time = -1;
+	int this_time = -1;
 
 	//itter through all events:
 	for (const json& event : rawData["events"]){
@@ -91,17 +106,18 @@ int main (int argc, char* argv[]){
 		sBuffer = event["k"];
 		this_time = event["t"];
 
-		if (last_time != NULL){
+		if (last_time != -1){
 			if ((this_time - last_time) >= timeout){
-				std::cout << "\n=========================" << std::endl;
+				//std::cout << "\n=========================" << std::endl;
+				out << "\n=========================" << std::endl;
 			}
 		}
 
 		//sBuffer.erase(std::remove(sBuffer.begin(), sBuffer.end(), '"'), sBuffer.end());
 		last_time = this_time;
 
-		std::cout << sBuffer;
-
+		//std::cout << sBuffer;
+		out << sBuffer;
 
 	}
 
