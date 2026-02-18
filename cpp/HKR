@@ -1,0 +1,25 @@
+HKR
+
+Persistance
+
+A number of simplified methods:
+
+	Startup Folder
+
+	Task Scheduler
+
+	Registry Keys
+		REG ADD run /v TestProgram /t REG_SZ /d "path"
+
+	DLL Hijacking?
+
+	.001 	Logon Script (Windows) 	Adversaries may use Windows logon scripts automatically executed at logon initialization to establish persistence. Windows allows logon scripts to be run whenever a specific user or group of users log into a system. This is done via adding a path to a script to the HKCU\Environment\UserInitMprLogonScript Registry key. 
+
+Current User:
+REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "SystemApp" /t REG_SZ /d "C:\Path\To\SystemApp.exe" /f
+
+All Users (must be run from an elevated Command Prompt or PowerShell):
+REG ADD "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" /v "SystemApp" /t REG_SZ /d "C:\Path\To\SystemApp.exe" /f
+
+RunOnce:
+REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce" /v "OneTimeScript" /t REG_SZ /d "C:\Path\To\script.cmd" /f
