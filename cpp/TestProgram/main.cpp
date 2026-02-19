@@ -2,8 +2,16 @@
 //Zedex01
 //Pulled from win32 api docs
 
-#include <iostream>
+#ifndef UNICODE
+#define UNICODE
+#endif
+
+#include "resource.h"
 #include <windows.h>
+
+//Toolbar
+#include <commctrl.h>
+#pragma comment(lib, "comctl32/lib")
 
 //status symbols
 const char* k = "[+] ";
@@ -14,7 +22,7 @@ const char* e = "[-] ";
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 //Alternative entry point for window:
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, hPrevInstance, PWSTR pCmdLine, int nCmdShow){
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow){
 
 	//Register window class:
 	const wchar_t CLASS_NAME[] = L"Sample Window Class";
@@ -25,13 +33,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, hPrevInstance, PWSTR pCmdLin
 	wc.hInstance = hInstance;
 	wc.lpszClassName = CLASS_NAME;
 
+	//Setting the icon for the top left
+	wc.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
+
 	RegisterClass(&wc);
 
 	//Create the window
 	HWND hwnd = CreateWindowEx(
 		0,						//Optional Windows Styles
 		CLASS_NAME,				//Window Class
-		L"Learn to program",	//Window Text
+		L"Test Program",		//Window Text
 		WS_OVERLAPPEDWINDOW, 	//Window Style
 		
 		//Size and position:
@@ -47,6 +58,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, hPrevInstance, PWSTR pCmdLin
 		return 0;
 	}
 
+
+	//Toolbar:
+	INITCOMMONCONTROLSEX icex{};
+	icex.dwSize = sizeof(icex);
+	icex.dwICC = ICC_BAR_CLASSES;
+	InitCommonControlsEx(&icex);
+
+
+
 	ShowWindow(hwnd, nCmdShow);
 
 	//Run the message loop
@@ -56,7 +76,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, hPrevInstance, PWSTR pCmdLin
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
-
 	return 0;
 }
 
@@ -73,11 +92,32 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 				PAINTSTRUCT ps;
 				HDC hdc = BeginPaint(hwnd, &ps);
 
-				//All painting happens here
 
-				FillRect(hdc, &ps.rcPaint, (HBRUSH), (COLOR_WINDOW+1));
+				//Custom Brush:
+				HBRUSH hBrush = CreateSolidBrush(RGB(18,18,18));
+				//All painting happens here
+				FillRect(hdc, &ps.rcPaint, hBrush);
+
+				//Fill with sys Color:
+				//FillRect(hdc, &ps.rcPaint, (HBRUSH) (COLOR_WINDOW+1));
 
 				EndPaint(hwnd, &ps);
+			}
+			return 0;
+
+		case WM_CREATE:
+			{
+				//Create Toolbar window
+				HWND hToolBar = CreateWindowEx(
+					0,
+					TOOLBARCLASSNAME,
+					NULL,
+					WS_CHILD | WS_VISIBLE | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS || CCS_TOP,
+					0,0,0,0,
+					hwnd,
+					NULL,
+					GetModuleHandle(NULL),
+					NULL);
 			}
 			return 0;
 	}
