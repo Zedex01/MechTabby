@@ -21,6 +21,7 @@ int main(int argc, char* argv[]){
 
 	if (curl) {
 		std::cout << k << "libcurl linked succesfully!" << std::endl;
+		std::cout << curl_version() << std::endl;
 		
 		CURLcode result;
 
