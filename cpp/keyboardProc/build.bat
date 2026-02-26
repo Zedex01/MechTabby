@@ -25,7 +25,8 @@ g++ -w -DCURL_STATICLIB -m64 main.cpp obj\appres.o -o KeyProc.exe ^
 -liphlpapi ^
 -lnormaliz ^
 -lz -lbrotlidec -lbrotlicommon -lzstd ^
--lws2_32 -lcrypt32 -lbcrypt -lwinmm -luser32
+-lws2_32 -lcrypt32 -lbcrypt -lwinmm -luser32 ^
+-lwtsapi32
 
 if %ERRORLEVEL% == 1 (echo Build Failed!)
 

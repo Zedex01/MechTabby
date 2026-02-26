@@ -1,0 +1,21 @@
+thies[\b][\b]s is crazy 
+=========================
+tbh[\r][UKN|91]l[\r]
+=========================
+[\r][\r][\b]data = 
+=========================
+okay, I ahve a s[\b][\b][\b][\b][\b][\b][\b][\b][\b][\b]how can i read json from a string and then write to a file?[\r]
+=========================
+[\r][\r]import json
+=========================
+json.loads()[<-]reques[\t].get[\t]().dec[\t]()[->][/\][\r][\t][\b]//Covn[\b][\b][\b][\b][\b]#C[\b][\b][\b]#Convert data t [\b]o
+=========================
+json[\b][\b][\b][\b] josn[\b][\b][\b]son
+=========================
+[\r][\r]
+=========================
+[\r]with[\b] ![\b][\b]![\b][\b][\b][\b] open()[<-]"output.json[->], "w[->][->] as f:[\r]json.dump
+=========================
+(daat[\b][\b]ta, f, indent=4[->][/\][\r]
+=========================
+[UKN|91]l

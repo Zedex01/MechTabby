@@ -4,6 +4,8 @@ from flask import Flask, render_template, request
 from pathlib import Path
 import sys
 
+import json
+
 # === Consts ===
 HOST = '127.0.0.1'
 PORT = 5000
@@ -39,7 +41,12 @@ def main(argc = None, argv = None):
 			for header in request.headers:
 				print(header[0], ": ", header[1])
 
-			print("Content: ", request.get_data().decode())
+			#Convert data to json
+			data = json.loads(request.get_data().decode())
+			with open("output.json", "w") as f:
+				json.dump(data, f, indent=4)
+
+			print("Content Recived!")
 			print("===============================")
 
 		return "Request Recived!", 200 

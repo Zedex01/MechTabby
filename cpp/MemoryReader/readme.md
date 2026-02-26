@@ -1,0 +1,1 @@
+Read live memory for specific apps

