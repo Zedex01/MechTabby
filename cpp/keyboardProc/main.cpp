@@ -57,13 +57,31 @@ int iEventCount = 0;
 
 
 //Add keyEvent to 'data'
-void addEvent(std::string key, bool mods[], int time){
+void addEvent(std::string key, int time){
+
+	if (data.size() == 0){
+		//re-init
+		data["app"] = "mkl";
+		data["version"] = sJsonVersion;
+		data["events"] = json::array();
+	}
+
 	iEventCount += 1;
 
 	json event = {{"k", key},{"t", time}};
 
 	//Add event to events
 	data["events"].push_back(event);
+}
+
+void resetJson(){
+	//Wipe json
+	data.clear()
+
+	//re-init
+	data["app"] = "mkl";
+	data["version"] = sJsonVersion;
+	data["events"] = json::array();
 }
 
 //Write json content to file
@@ -250,7 +268,7 @@ LRESULT CALLBACK SomeProc(int code, WPARAM wParam, LPARAM lParam){
 					sSwResult = std::string(1,ascii);
 			}
 
-			addEvent(sSwResult, mods, data.time);
+			addEvent(sSwResult, data.time);
 			//Debug:
 			//std::cout << i << sSwResult << std::endl;
 		}
