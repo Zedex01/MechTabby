@@ -11,8 +11,6 @@
 #define ID_FILE_OPEN  1002
 #define ID_FILE_EXIT  1003
 
-
-
 #include "resource.h"
 #include <windows.h>
 
@@ -29,6 +27,10 @@
 const char* k = "[+] ";
 const char* i = "[*] ";
 const char* e = "[-] ";
+
+
+//Edit Window Class handle
+HWND hEdit;
 
 //Basic Window:
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -73,13 +75,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	BOOL useDarkBorder = TRUE;
 	DwmSetWindowAttribute(hwnd, DWMWA_BORDER_COLOR, &useDarkBorder, sizeof(useDarkBorder));
 
-
-	//Toolbar:
-	//INITCOMMONCONTROLSEX icex{};
-	//icex.dwSize = sizeof(icex);
-	//icex.dwICC = ICC_BAR_CLASSES;
-	//InitCommonControlsEx(&icex);
-
 	ShowWindow(hwnd, nCmdShow);
 
 	//Run the message loop
@@ -121,6 +116,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 		case WM_CREATE:
 			{
 
+				//MenuBar:
 				HMENU hMenuBar = CreateMenu();
 				HMENU hFileMenu = CreatePopupMenu();	
 				AppendMenu(hFileMenu, MF_STRING, ID_FILE_NEW,  L"&New");
@@ -129,52 +125,22 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 				AppendMenu(hFileMenu, MF_STRING, ID_FILE_EXIT, L"E&xit");	
 				AppendMenu(hMenuBar, MF_POPUP, (UINT_PTR)hFileMenu, L"&File");	
 				SetMenu(hwnd, hMenuBar);
-				//Create Toolbar window
-				//HWND hToolBar = CreateWindowEx(
-				//	0,
-				//	TOOLBARCLASSNAME,
-				//	NULL,
-				//	WS_CHILD | WS_VISIBLE | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS | CCS_TOP,
-				//	0,0,0,0,
-				//	hwnd,
-				//	NULL,
-				//	GetModuleHandle(NULL),
-				//	NULL);
 
-				//SendMessage(hToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
-//
-				//SendMessage(hToolBar, TB_LOADIMAGES, IDB_STD_SMALL_COLOR,(LPARAM)HINST_COMMCTRL);
-//
-				////Create buttons
-				//TBBUTTON tbb[3] = {};
-//
-				//tbb[0].iBitmap = STD_FILENEW;
-				//tbb[0].idCommand = ID_BTN_NEW;
-				//tbb[0].fsState = TBSTATE_ENABLED;
-				//tbb[0].fsStyle = TBSTYLE_BUTTON;
-//
-				//tbb[1].iBitmap = STD_FILEOPEN;
-				//tbb[1].idCommand = ID_BTN_OPEN;
-				//tbb[1].fsState = TBSTATE_ENABLED;
-				//tbb[1].fsStyle = TBSTYLE_BUTTON;
-//
-				//tbb[2].iBitmap = STD_FILESAVE;
-				//tbb[2].idCommand = ID_BTN_SAVE;
-				//tbb[2].fsState = TBSTATE_ENABLED;
-				//tbb[2].fsStyle = TBSTYLE_BUTTON;
-//
-				////Add them:
-				//SendMessage(hToolBar, TB_ADDBUTTONS,(WPARAM)3,(LPARAM)&tbb);
-//
-				//SendMessage(hToolBar, TB_AUTOSIZE, 0, 0);
-//
-				//ShowWindow(hToolBar, TRUE);
-
-
+				//Edit Window:
+				hEdit = CreateWindowEx(
+					WS_EX_CLIENTEDGE,
+					L"EDIT",
+					L"",
+					WS_CHILD | WS_VISIBLE | ES_MULTILINE |ES_AUTOVSCROLL | ES_AUTOHSCROLL | WS_VSCROLL | WS_HSCROLL,
+					0, 0, 0, 0,
+					hwnd,
+					NULL,
+					GetModuleHandle(NULL),
+					NULL);
 			}
 			break;
 
-			case WM_COMMAND:
+		case WM_COMMAND:
 			{
 			    switch (LOWORD(wParam))
 			    {
@@ -193,7 +159,32 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 			}
 			break;
 
+		case WM_SIZE:
+			{
 
+				//Resize Edit window
+				RECT rc;
+
+				GetClientRect(hwnd, &rc);
+				SetWindowPos(hEdit, NULL,
+					0, 0,
+					rc.right - rc.left,
+					rc.bottom - rc.top,
+					SWP_NOZORDER);
+			}
+			break;
+
+		case WM_CTLCOLOREDIT:
+			{
+				//Set Text Window to be dark:
+				HDC hdcEdit = (HDC)wParam;
+				SetTextColor(hdcEdit, RGB(255,255,255));
+				SetBkColor(hdcEdit, RGB(18,18,18));
+
+				static HBRUSH hBrush = CreateSolidBrush(RGB(18,18,18));
+				return (INT_PTR)hBrush;
+				break;
+			}
 
 	}
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);

@@ -4,6 +4,8 @@ from flask import Flask, render_template, request
 from pathlib import Path
 import sys
 
+from datetime import datetime
+
 import json
 
 # === Consts ===
@@ -39,14 +41,16 @@ def main(argc = None, argv = None):
 			print("=========POST==================")
 
 			for header in request.headers:
-				print(header[0], ": ", header[1])
+			        print(header[0], ": ", header[1])
+
+			time_stamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+			file = time_stamp + ".json"
 
 			#Convert data to json
 			data = json.loads(request.get_data().decode())
-			with open("output.json", "w") as f:
-				json.dump(data, f, indent=4)
+			with open(file, "w") as f:
+			        json.dump(data, f, indent=4)
 
-			print("Content Recived!")
 			print("===============================")
 
 		return "Request Recived!", 200 

