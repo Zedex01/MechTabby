@@ -4,6 +4,8 @@ from kivy.uix.togglebutton import ToggleButton
 from kivy.clock import Clock
 from plyer import vibrator  # optional, just for feedback
 from jnius import autoclass
+from kivy.uix.floatlayout import FloatLayout
+
 
 # Access Android APIs
 PythonActivity = autoclass('org.kivy.android.PythonActivity')
@@ -12,13 +14,21 @@ MotionEvent = autoclass('android.view.MotionEvent')
 Context = autoclass('android.content.Context')
 
 class TapApp(App):
+
     def build(self):
-        #Set toggle to be false
         self.tapping = False
-        layout = BoxLayout(orientation='vertical')
-        self.toggle = ToggleButton(text='Tap: OFF', size_hint=(1, 0.2))
+        
+        layout = FloatLayout()
+
+        self.toggle = ToggleButton(
+            text='Tap: OFF',
+            size_hint=(0.3, 0.1),   # 30% width, 10% height
+            pos_hint={'x': 0, 'top': 1}  # Top-left corner
+        )
+
         self.toggle.bind(on_press=self.toggle_tap)
         layout.add_widget(self.toggle)
+
         return layout
 
     def toggle_tap(self, instance):
