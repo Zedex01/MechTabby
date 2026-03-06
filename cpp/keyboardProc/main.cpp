@@ -298,7 +298,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 			if (!isLocked) {
 
 				isLocked = true;
-				std::cout << "User Locked Screen!" << std::endl;
+				std::cout << i << "User Locked Screen!" << std::endl;
 
 				//Send data to server!
 				TrySendData();
@@ -308,20 +308,20 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam){
 		else if (wParam == WTS_SESSION_UNLOCK)
 			if (isLocked) {
 				isLocked = false;
-				std::cout << "User Unlocked Screen!" << std::endl;
+				std::cout << i <<"User Unlocked Screen!" << std::endl;
 			}
 		break;
 
 	//Catch shutdown or logoff
 	case WM_QUERYENDSESSION:
-		std::cout << "System is Shutting down or User is logging off." << std::endl;
+		std::cout << i << "System is Shutting down or User is logging off." << std::endl;
 
 		return TRUE; //Allow Shutdown
 
 
 	case WM_ENDSESSION:
 		if (wParam)
-			std::cout << "Session is ending" << std::endl;
+			std::cout << i << "Session is ending" << std::endl;
 		break;
 
 	}
@@ -357,6 +357,7 @@ int main(int argc, char* argv[]){
 	/*=========================================
 		Path Setup
 	=========================================*/
+	/*
 	//get root dir:
 	char szBuffer[MAX_PATH];
 
@@ -373,7 +374,7 @@ int main(int argc, char* argv[]){
 	} 
 	else {std::cout << k << pOut.filename() << " found." << std::endl;}
 
-	
+	*/
 	/*=========================================
 		Hook Setup
 	=========================================*/

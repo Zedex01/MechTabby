@@ -45,10 +45,11 @@ def main(argc = None, argv = None):
 
 			time_stamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 			file = time_stamp + ".json"
+			file_path = data_dir / file
 
 			#Convert data to json
 			data = json.loads(request.get_data().decode())
-			with open(file, "w") as f:
+			with open(file_path, "w") as f:
 			        json.dump(data, f, indent=4)
 
 			print("===============================")
