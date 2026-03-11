@@ -6,12 +6,15 @@ def main(argc = None, argv = None):
 		
 		r = requests.post("http://localhost:11434/api/generate",
 			json = {
-				"model":"mistral",
-				"prompt": msg
+				"model":"mistral:latest",
+				"prompt": msg,
+				"stream": False
 			})
 
-		reply = r.json()
-		#reply = r.json()["response"].strip()
+		try:
+			reply = r.json()["response"].strip()
+		except:
+			reply = r.json()["error"].strip()
 
 		print(reply)
 

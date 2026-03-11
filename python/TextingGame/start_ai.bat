@@ -1,1 +1,1 @@
-ollama serve mistral --verbose
+ollama serve 
