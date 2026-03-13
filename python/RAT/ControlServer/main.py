@@ -1,49 +1,53 @@
-from flask import Flask, render_template, request
-import sys
+import asyncio
+import websockets
+import json
 
 
-HOST = "127.0.0.1"
-PORT = 5000
+#Don't block main websocket comm while waiting for input from op
+async def SendCommand(ws):
+	loop = asyncio.get_event_loop()
+
+	path = "PS"
+
+	while True:
+		ctx = await loop.run_in_executor(None, input, f"{path}> ")
+
+		out = {"ctx": ctx}
+		await ws.send(json.dumps(out))
+
+		data = await ws.recv()
+		data = json.loads(data)
+		
+		path = data["path"]
+
+		raw_output = data["output"]
+
+		#Print back to operator
+		print("")
+		for line in raw_output:
+			print(line.rstrip())
+
+		print("=====================================")
 
 
-# === Main ===
-def main(argc = None, argv = None):
-	print("Server Starting...") 
 
-	#Create Server Instance
-	app = Flask(__name__)
+async def handler(ws):
+	print("Client Connected!")
+	try:
+		#Print Device that connected
+		device = await ws.recv()
+		print(device)
 
-	# === Pages ===
-	@app.route('/')
-	def root():
-		return 0;
+		await SendCommand(ws)
 
-	@app.route('/upload', methods=['GET', 'POST'])
-	def upload():
 
-		if request.method == 'POST':
-			print("=========POST==================")
+	except websockets.ConnectionClosed:
+		print("Client Disconnected")
 
-			for header in request.headers:
-			        print(header[0], ": ", header[1])
+async def main():
+	async with websockets.serve(handler, "localhost", 8765):
+		print("Server running")
+		await asyncio.Future()
 
-			time_stamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-			file = time_stamp + ".json"
-			file_path = data_dir / file
 
-			#Convert data to json
-			data = json.loads(request.get_data().decode())
-			with open(file_path, "w") as f:
-			        json.dump(data, f, indent=4)
-
-			print("===============================")
-
-		return "Request Recived!", 200 
-
-	#Start Server Instace
-	app.run(host=HOST,port=PORT)
-	print("Waiting on connection...")
-	return 0
-
-if __name__ == "__main__":
-	main()
+asyncio.run(main())
