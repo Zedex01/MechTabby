@@ -2,7 +2,6 @@
 
 Simple loop:
 
-
 CS runs on targeted dns, waits for a connection, once recieved opens a comms channel
 Terminal for inputing commands
 
@@ -32,3 +31,8 @@ Once Connected:
 	Setup and run reverse ssh back to the server from target
 
 Open ssh connection and go to town
+
+Can use autossh to always try to connect back to ther server
+
+
+### Setting up ssh server ###
