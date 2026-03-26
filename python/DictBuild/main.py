@@ -8,7 +8,7 @@ gendict <file>
 """
 from pathlib import Path
 
-wordlist = ["morning","telephone","warning","notebook","bleed","neck","see","insert","tease"]
+wordlist = ["canada"]
 
 symbols = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "?", "<", ">", "~"]
 
@@ -51,11 +51,21 @@ def NumSymSym(w):
 				w3 = w2 + s2
 				outlist.append(w3)
 
-def SymSymNum(w):
+def SymSymWordNum(w):
 	for s1 in symbols:
 		w1 = s1 + w
 		for s2 in symbols:
 			w2 = s2 + w1
+			for i in range (0, 10000):
+				w3 = w2
+				w3 += str(i)
+				outlist.append(w3)
+
+def WordSymSymNum(w):
+	for s1 in symbols:
+		w1 = w + s1
+		for s2 in symbols:
+			w2 = w1 + s2
 			for i in range (0, 10000):
 				w3 = w2
 				w3 += str(i)
@@ -133,7 +143,6 @@ def SymSymSymWord(w):
 				w3 = s3 + w2
 				outlist.append(w3)
 
-
 def BasicNum(w):
 	for i in range (0,10000):
 		word = w
@@ -175,7 +184,8 @@ def main(argc = None, argv = None):
 		NumSym(word)
 		SymNumSym(word)
 
-		SymSymNum(word)
+		WordSymSymNum(word)
+		SymSymWordNum(word)
 		NumSymSym(word)
 
 		#SymSymSymNum(word)
