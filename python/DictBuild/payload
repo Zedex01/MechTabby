@@ -1,0 +1,18 @@
+::This is a sample document used for testing
+a
+
+WIN
+
+WIN r
+
+ALT y
+
+CTRL ALT s
+
+SHIFT s
+
+WAIT 2
+
+WRITE Hello, World!
+
+ENTER
