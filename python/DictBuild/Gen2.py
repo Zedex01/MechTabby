@@ -2,11 +2,27 @@ from itertools import product
 import os, time, glob
 from concurrent.futures import ProcessPoolExecutor
 
-prelist = ["laura", "panasonic", "matt", "mike", "leo", "rusty", "ruru", "spike", "xena", "zena"]
+"""=================================================================
+	Settings
+================================================================="""
+#Limits:
+WORDS = 2
+NUMBERS = 2
+SYMBOLS = 2
+
+NUM_RANGE = 100
+
+#Custom Words
+prelist = ["matt", "mike", "leo", "rusty", "spike", "zena"]
+
+OUT_DIR = "X:\\tmp\\"
+"""=================================================================
+	Main
+================================================================="""
 
 symbols = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "?", "<", ">", "~"]
 
-numbers = [str(n) for n in range(0,100)]
+numbers = [str(n) for n in range(0,NUM_RANGE)]
 
 wordlist = []
 
@@ -76,9 +92,9 @@ def generate(pattern):
 
 def GenPatterns():
 	limits = {
-	 'W': 1,
-	 'N': 2,
-	 'S': 2
+	 'W': WORDS,
+	 'N': NUMBERS,
+	 'S': SYMBOLS
 	}
 
 	chars = list(limits.keys())
@@ -103,7 +119,7 @@ def ProcessPatterns(precomputed_chunk, worker_id):
 	BATCH_SIZE = 100_000
 	start_time = time.time()
 	#Each worker has its own file
-	file_name = f"X:\\Programming\\DictBuild\\Dict_{worker_id}.txt"
+	file_name = f"{OUT_DIR}Dict_{worker_id}.txt"
 
 	with open(file_name, 'ab') as f:
 		for pattern, pools in precomputed_chunk:
@@ -129,11 +145,10 @@ def chunked(lst, n):
 	for i in range(0,len(lst), n):
 		yield lst[i:i+n]
 
-
 if __name__ == "__main__":
 	print("Deleting old dicts...")
 	#Delete old dicts
-	files = glob.glob("X:\\Programming\\DictBuild\\dict*")
+	files = glob.glob(f"{OUT_DIR}dict*")
 	for f in files:
 		os.remove(f)
 
@@ -147,6 +162,10 @@ if __name__ == "__main__":
 	print("Passwords Precompiled")
 
 	CalcTotalPasswords()
+
+	if input("Would you like to start? [Y/n] ").capitalize() != "Y":
+		print("Exiting...")
+		exit()
 
 	num_workers = os.cpu_count()
 	chunk_size = max(1, len(precomputed_patterns) // num_workers)
@@ -165,9 +184,9 @@ if __name__ == "__main__":
 	print("All workers finished!, merging files...")
 	start_copy = time.time()
 
-	files = sorted(glob.glob("X:\\Programming\\DictBuild\\dict_*.txt"))
+	files = sorted(glob.glob(f"{OUT_DIR}dict_*.txt"))
 
-	with open("X:\\Programming\\DictBuild\\dict", "wb") as f_out:
+	with open(f"{OUT_DIR}dict", "wb") as f_out:
 	    for file in files:
 	        print(f"Copying from file: {file}")
 	        with open(file, 'rb') as f_in:
